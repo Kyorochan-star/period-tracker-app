@@ -1,0 +1,15 @@
+# 仮想環境を無視
+backend/.venv/
+
+# Pythonキャッシュを無視
+**/__pycache__/
+*.pyc
+
+# VSCode設定を無視
+.vscode/
+
+# 環境変数
+.env
+
+# macOSの隠しファイル
+.DS_Store
