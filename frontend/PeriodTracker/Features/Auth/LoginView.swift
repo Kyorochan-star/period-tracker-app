@@ -1,0 +1,98 @@
+//
+//  Untitled.swift
+//  FriendsFavoriteMovies
+//
+//  Created by 藤瀬太翼 on 2025/07/04.
+//
+
+import SwiftUI
+
+struct LoginView: View {
+    @Binding var isLoggedIn: Bool
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Color.blue.opacity(0.1)
+                    .ignoresSafeArea()
+                VStack(spacing: 16) {
+                        Image(systemName: "heart.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 50, height: 50)
+                            .foregroundColor(.blue)
+                        
+                        Text("PeriodCare")
+                            .font(.title)
+                            .fontWeight(.bold)
+                        
+                        Text("あなたの健康をサポート")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        
+                        TextField("メールアドレス", text: .constant(""))
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding(.horizontal)
+                        
+                        SecureField("パスワード", text: .constant(""))
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding(.horizontal)
+                        
+                        Button(action: {
+                            // パスワードリセット処理
+                        }) {
+                            Text("パスワードをお忘れの方はこちら")
+                                .font(.footnote)
+                                .foregroundColor(.blue)
+                        }
+                        Button(action: {
+                            isLoggedIn = true
+                        }) {
+                            Text("ログイン")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
+                        }
+                        .padding(.horizontal)
+                        
+                        
+                        
+                        Button(action: {
+                            // Googleログイン処理
+                        }) {
+                            Text("Google でログイン")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.gray.opacity(0.2))
+                                .foregroundColor(.black)
+                                .cornerRadius(8)
+                        }
+                        .padding(.horizontal)
+                        Divider()
+                        Text("登録がお済みでない方はこちら")
+                            .font(.caption)
+                        NavigationLink(destination: SignUpView()) {
+                            Text("新規登録")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
+                        }
+                        .padding(.horizontal)
+                    
+                }
+                .frame(width: UIScreen.main.bounds.width * 0.8,
+                       height: UIScreen.main.bounds.height * 0.7)
+                .background(Color.white)
+                .cornerRadius(20)
+                .shadow(radius:10)
+            }
+        }
+    }
+}
+
+#Preview {
+    LoginView(isLoggedIn: .constant(false))
+}
