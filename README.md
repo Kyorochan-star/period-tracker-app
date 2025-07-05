@@ -17,7 +17,7 @@
 - fe/feat/chat-ui
 - be/feat/auth
 
-## Commitメッセージ / Pull Requestのタイトル　命名規則
+## Commitメッセージ / PRのタイトル　命名規則
 
 目的（feat, fix, chore）: 内容を簡潔に記述
 
