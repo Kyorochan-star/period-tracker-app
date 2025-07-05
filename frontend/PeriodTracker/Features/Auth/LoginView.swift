@@ -1,9 +1,11 @@
 //
-//  Untitled.swift
-//  FriendsFavoriteMovies
+//  LoginView.swift
+//  PeriodTracker
 //
 //  Created by 藤瀬太翼 on 2025/07/04.
 //
+//  機能説明:
+//  - ユーザーログイン画面
 
 import SwiftUI
 

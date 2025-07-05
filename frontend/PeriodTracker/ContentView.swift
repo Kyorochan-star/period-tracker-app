@@ -1,9 +1,13 @@
 //
 //  ContentView.swift
-//  Period_demo
+//  PeriodTracker
 //
 //  Created by 藤瀬太翼 on 2025/07/04.
 //
+//  機能説明:
+//  - アプリのメインコンテナ
+//  - ログイン状態の管理
+//  - タブナビゲーション（カレンダー、ホーム、チャット）
 
 import SwiftUI
 
@@ -16,21 +20,21 @@ struct ContentView: View {
             LoginView(isLoggedIn: $isLoggedIn)
         } else{
         TabView(selection: $selectedTab) {
-            CalendarView()
+            ChatView()
                 .tabItem {
-                    Label("Calendar", systemImage: "calendar")
+                    Label("チャット", systemImage: "message.fill")
                 }
                 .tag(0)
             
             HomeView()
                 .tabItem {
-                    Label("Home", systemImage: "house.fill")
+                    Label("ホーム", systemImage: "house.fill")
                 }
                 .tag(1)
             
-            ChatView()
+            SettingView()
                 .tabItem {
-                    Label("Chat", systemImage: "message.fill")
+                    Label("設定", systemImage: "gearshape")
                 }
                 .tag(2)
         }
