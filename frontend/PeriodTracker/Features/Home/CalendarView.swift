@@ -1,10 +1,12 @@
 //
 //  CalendarView.swift
-//  FriendsFavoriteMovies
+//  PeriodTracker
 //
 //  Created by 藤瀬太翼 on 2025/07/04.
 //
-
+//  機能説明:
+//  - 月間カレンダー表示
+//  - 月間サマリー（生理期間、平均周期）
 
 import SwiftUI
 
@@ -34,8 +36,8 @@ struct CalendarView: View {
 
     var body: some View {
         VStack {
-            Text("周期カレンダー")
-                .font(.title)
+            Text("カレンダー")
+                .font(.title2)
                 .bold()
                 .frame(maxWidth: 350,alignment: .leading)
             // Month and Year Header with Controls
