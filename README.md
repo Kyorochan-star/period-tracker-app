@@ -21,8 +21,8 @@
 
 目的（feat, fix, chore）: 内容を簡潔に記述
 
-ex） #8 feat: チャットUIの修正
-ex） #12 fix: api通信のバグを修正
+ex） feat: チャットUIの修正
+ex） fix: api通信のバグを修正
 
 
 ## ブランチの作成
