@@ -13,3 +13,20 @@ backend/.venv/
 
 # macOSの隠しファイル
 .DS_Store
+
+# Xcode関連
+**/xcuserstate
+**/xcuserdata/
+
+# VCS関連（複数人開発で重要）
+*.xccheckout
+*.xcscmblueprint
+
+# Xcodeビルド関連
+frontend/build/
+frontend/DerivedData/
+
+# App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
