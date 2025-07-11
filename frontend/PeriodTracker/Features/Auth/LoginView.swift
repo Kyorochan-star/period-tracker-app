@@ -10,6 +10,7 @@
 import SwiftUI
 
 struct LoginView: View {
+    @StateObject var viewModel: LoginViewModel
     @Binding var isLoggedIn: Bool
     var body: some View {
         NavigationStack {
@@ -31,11 +32,11 @@ struct LoginView: View {
                             .font(.caption)
                             .foregroundColor(.gray)
                         
-                        TextField("メールアドレス", text: .constant(""))
+                        TextField("メールアドレス", text: $viewModel.email)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding(.horizontal)
                         
-                        SecureField("パスワード", text: .constant(""))
+                        SecureField("パスワード", text: $viewModel.password)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding(.horizontal)
                         
@@ -47,7 +48,15 @@ struct LoginView: View {
                                 .foregroundColor(.blue)
                         }
                         Button(action: {
-                            isLoggedIn = true
+                            // LoginViewModel.login()は非同期関数だが、
+                            // Buttonのactionは非同期関数ではないため、
+                            // Taskでラップする必要がある
+                            Task {
+                                await viewModel.login()
+                                if viewModel.isLoggedIn {
+                                    isLoggedIn = true
+                                }
+                            }
                         }) {
                             Text("ログイン")
                                 .frame(maxWidth: .infinity)
@@ -96,5 +105,7 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView(isLoggedIn: .constant(false))
+    LoginView(
+        viewModel: LoginViewModel(userRepository: MockUserRepository()),
+        isLoggedIn: .constant(false))
 }

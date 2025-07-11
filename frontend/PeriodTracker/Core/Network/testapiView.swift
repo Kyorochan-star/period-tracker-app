@@ -35,7 +35,7 @@ struct TestAPIView: View {
                 // /login (POST)
                 Button("Test /login (POST)") {
                     let apiService = APIService()
-                    let loginData = UserLoginRequestDTO(email: "test@example.com", hasehed_password: "password")
+                    let loginData = UserLoginRequestDTO(email: "test@example.com", hashed_password: "password")
                     apiService.post("http://127.0.0.1:8000/login", data: loginData) { (result: Result<UserLoginResponseDTO, Error>) in
                         switch result {
                         case .success(let data):

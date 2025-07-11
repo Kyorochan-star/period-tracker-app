@@ -86,3 +86,47 @@ class APIService{
     }
 
 }
+
+extension APIService {
+    // GET
+    func get<U: Decodable>(_ url: String,
+                           queryItems: [URLQueryItem]? = nil) async throws -> U {
+
+        var components = URLComponents(string: url)!
+        components.queryItems = queryItems
+        let request = URLRequest(url: components.url!)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+//        try validate(response: response)              // ステータスコード判定
+        return try JSONDecoder().decode(U.self, from: data)
+    }
+
+    // POST
+    func post<T: Encodable, U: Decodable>(_ url: String, data: T) async throws -> U {
+
+        var request = URLRequest(url: URL(string: url)!)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONEncoder().encode(data)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+//        try validate(response: response)
+        return try JSONDecoder().decode(U.self, from: data)
+    }
+
+    // PATCH 
+    func patch<T: Encodable, U: Decodable>(_ url: String, data: T) async throws -> U {
+
+    var request = URLRequest(url: URL(string: url)!)
+    request.httpMethod = "PATCH"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.httpBody = try JSONEncoder().encode(data)
+
+    let (data, response) = try await URLSession.shared.data(for: request)
+
+//    try validate(response: response)
+    return try JSONDecoder().decode(U.self, from: data)
+    }
+}
