@@ -20,8 +20,10 @@
 import Foundation 
 
 class APIService{
-    func get<T : Codable> (_ url: String, completion: @escaping (Result<T, Error>) -> Void) {
-        let request = URLRequest(url: URL(string: url)!)
+    func get<T : Codable> (_ url: String, queryItems: [URLQueryItem]? = nil, completion: @escaping (Result<T, Error>) -> Void) {
+        var urlComponents = URLComponents(string: url)!
+        urlComponents.queryItems = queryItems 
+        let request = URLRequest(url: urlComponents.url!)
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 completion(.failure(error))
@@ -59,4 +61,28 @@ class APIService{
         }
         task.resume()
     }
+
+    func patch<T: Codable, U: Codable>(_ url: String, data: T, completion: @escaping (Result<U, Error>) -> Void) {
+        var request = URLRequest(url: URL(string: url)!)
+        request.httpMethod = "PATCH"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let encoder = JSONEncoder()
+        let jsonData = try? encoder.encode(data)
+        request.httpBody = jsonData
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                completion(.failure(error))
+            } else if let data = data {
+                do {
+                    let jsonData = try JSONDecoder().decode(U.self, from: data)
+                    completion(.success(jsonData))
+                } catch {
+                    completion(.failure(error))
+                }
+            }
+        }
+        task.resume()
+    }
+
 }
