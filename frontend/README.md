@@ -56,11 +56,11 @@ PeriodTracker/
 │   ├── Auth/                  # 認証機能
 │   │   ├── LoginView.swift
 │   │   └── SignUpView.swift
-│   ├── Calendar/              # カレンダー機能
-│   │   └── CalendarView.swift
+│   │   
 │   ├── Home/                  # ホーム機能
 │   │   ├── HomeView.swift
 │   │   └── RecordModal.swift
+│   │   └── CalendarView.swift      # カレンダー機能
 │   └── Chat/                  # チャット機能
 │       └── ChatView.swift
 ├── Models/                    # データモデル
