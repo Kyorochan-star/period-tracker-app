@@ -1,0 +1,8 @@
+{
+  "access_token": "sampletoken123",
+  "token_type": "bearer",
+  "user_id": 1,
+  "email": "test@example.com",
+  "name": "テストユーザー",
+  "auth_provider": "local"
+} 
