@@ -12,12 +12,18 @@
 import SwiftUI
 
 struct ContentView: View {
+    // repositoryの注入 本番環境の場合はNetworkUserRepositoryを使用
+    private let userRepository: UserRepository = MockUserRepository()
+
     @State private var isLoggedIn = false
     @State private var selectedTab = 1
 
     var body: some View {
         if !isLoggedIn {
-            LoginView(isLoggedIn: $isLoggedIn)
+            LoginView(
+                // ログイン画面のビューモデルを注入
+                viewModel: LoginViewModel(userRepository: userRepository),
+                isLoggedIn: $isLoggedIn)
         } else{
         TabView(selection: $selectedTab) {
             ChatView()
@@ -43,5 +49,6 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(
+    )
 }
