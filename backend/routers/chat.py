@@ -36,13 +36,14 @@ CHARACTER_PROMPTS = {
 def get_response(mode: str, messages: list[dict]) -> str:
     system_prompt = CHARACTER_PROMPTS.get(mode, CHARACTER_PROMPTS["mother"])
 
+    # システムプロンプトを先頭に追加
+    full_messages = [{"role": "system", "content": system_prompt}] + messages
+
     res = client.chat.completions.create(
         model="gpt-4o",
-        messages=[{"role": "system", "content": system_prompt}] + messages
+        messages=full_messages
     )
     return res.choices[0].message.content
-
-
 
 
 @router.post("/", response_model=ChatMessageResponse, status_code=status.HTTP_201_CREATED)
@@ -55,8 +56,8 @@ def chat_with_ai(
     AIに質問を送信し、回答を取得して履歴に保存します。
     ユーザーが選択したモードに基づいてAIの応答を生成します。
     """
-    # chat_message_create.mode を generate_gpt_response に渡す
-    ai_response = get_response(chat_message_create.mode, chat_message_create.query)
+    # フロントエンドから送られてきたmessages配列を使用
+    ai_response = get_response(chat_message_create.mode, chat_message_create.messages)
     
     # チャット履歴をデータベースに保存
     db_chat_message = crud.create_chat_message(

@@ -23,12 +23,18 @@ def get_user(db: Session, user_id: int) -> Optional[User]:
 def get_user_by_email(db: Session, email: str) -> Optional[User]:
     return db.query(User).filter(User.email == email).first()
 
+def get_user_by_id(db: Session, user_id: int) -> Optional[User]:
+    return db.query(User).filter(User.id == user_id).first()
+
+def get_user_by_google_sub(db: Session, google_sub: str) -> Optional[User]:
+    return db.query(User).filter(User.google_sub == google_sub).first()
+
 # この関数はschemas.UserCreateがusernameを含まないため、通常は不要です。
 # もし必要ならUserモデルにusernameフィールドがあることを確認してください。
 # def get_user_by_username(db: Session, username: str) -> Optional[User]:
 #    return db.query(User).filter(User.username == username).first()
 
-def create_user(db: Session, user: UserCreate, auth_provider: str = "local") -> User:
+def create_user(db: Session, user: UserCreate, auth_provider: str = "local", google_sub: str = None) -> User:
     """
     新しいユーザーを作成します。
     """
@@ -41,6 +47,7 @@ def create_user(db: Session, user: UserCreate, auth_provider: str = "local") -> 
         hashed_password=hashed_password, # Noneの場合もそのままセット
         name=user.name,
         auth_provider=auth_provider,
+        google_sub=google_sub,  # Google認証の場合に設定
         created_at=datetime.now(timezone.utc), # 追加
         updated_at=datetime.now(timezone.utc)  # 追加
     )
@@ -292,16 +299,20 @@ def delete_password_reset_token(db: Session, token_id: int) -> bool:
 # ==== ChatMessage CRUD ====
 
 def create_chat_message(db: Session, chat_message: ChatMessageCreate, user_id: int, ai_response: str) -> ChatMessage:
+    # messages配列から最後のユーザーメッセージを取得してqueryとして保存
+    user_messages = [msg for msg in chat_message.messages if msg.role == "user"]
+    last_user_query = user_messages[-1].content if user_messages else ""
+    
     db_chat_message = ChatMessage(
         user_id=user_id,
-        query=chat_message.query,
+        query=last_user_query,
         response=ai_response,
         timestamp=datetime.now(timezone.utc),
-        mode=chat_message.mode # <-- chat_message.mode も保存する
+        mode=chat_message.mode
     )
     db.add(db_chat_message)
     db.commit()
-    db.refresh(db_chat_message) #db_chat_messageオブジェクト(インスタンス)を最新状態に更新
+    db.refresh(db_chat_message)
     return db_chat_message 
 
 def get_chat_messages(db: Session, user_id: int, skip: int = 0, limit: int = 100) -> List[ChatMessage]:
