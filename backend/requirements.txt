@@ -1,15 +1,31 @@
-annotated-types==0.7.0
-anyio==4.9.0
-click==8.2.1
-fastapi==0.115.14
-h11==0.16.0
-idna==3.10
-pydantic==2.11.7
-pydantic_core==2.33.2
-setuptools==80.9.0
+# Core Frameworks
+fastapi==0.111.0  # Stable and widely used
+uvicorn==0.30.1   # Compatible with FastAPI 0.111.0
+starlette==0.37.2 # FastAPI dependency
+
+# Database & ORM
+SQLAlchemy==2.0.31  # Modern and widely adopted ORM
+# If you are using an async database driver with SQLAlchemy 2.0
+# psycopg2-binary==2.9.9 # For PostgreSQL (e.g., if using Asyncpg with SQLAlchemy)
+# asyncpg==0.29.0 # For async PostgreSQL driver (if using it directly with FastAPI/SQLAlchemy)
+# aiosqlite==0.20.0 # For async SQLite driver (if using it with SQLAlchemy's async capabilities)
+
+# Authentication & Hashing
+python-jose[cryptography]==3.3.0 # For JWT token handling
+passlib[bcrypt]==1.7.4         # For password hashing
+# Environment Variables
+python-dotenv==1.0.1           # For loading .env files
+
+# Pydantic (FastAPI's data validation)
+pydantic==2.8.2
+pydantic-settings==2.3.4 # For managing settings (often used with FastAPI)
+pydantic_core==2.20.1 # Pydantic dependency
+
+# Other common dependencies (often installed implicitly but good to be explicit for stability)
+annotated-types==0.6.0
+anyio==4.4.0
+click==8.1.7
+h11==0.14.0
+idna==3.7
 sniffio==1.3.1
-starlette==0.46.2
-typing-inspection==0.4.1
-typing_extensions==4.14.0
-uvicorn==0.35.0
-wheel==0.45.1
+typing-extensions==4.12.2

@@ -30,3 +30,8 @@ frontend/DerivedData/
 *.ipa
 *.dSYM.zip
 *.dSYM
+
+# DynamoDB Local Data and related files
+docker-dynamodb-data/
+dynamodb-local-metadata.json
+dynamodb_local/
