@@ -99,7 +99,7 @@ struct TestAPIView: View {
                 // /period (POST)
                 Button("Test /period (POST)") {
                     let apiService = APIService()
-                    let periodData = PeriodStartRequestDTO(id: 1, startdate: "2025-07-11")
+                    let periodData = PeriodStartRequestDTO(startdate: "2025-07-11")
                     apiService.post("http://127.0.0.1:8000/period", data: periodData) { (result: Result<PeriodStartResponseDTO, Error>) in
                         switch result {
                         case .success(let data):

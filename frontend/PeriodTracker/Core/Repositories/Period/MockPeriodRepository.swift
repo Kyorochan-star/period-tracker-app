@@ -14,6 +14,14 @@ import Foundation
 final class MockPeriodRepository: PeriodRepository {
     private let api = APIService()
 
+    // 直近1件の周期を取得 (GET /periods/latest)
+    func latestPeriod() async throws -> Period? {
+        let responseDTO: [PeriodCalendarResponseDTO] =
+            try await api.get("http://127.0.0.1:8000/periods?limit=1&order_by=created_at&order_direction=desc")
+        // 1 件のみ返る想定
+        return responseDTO.first?.toDomain()
+    }
+
     // 周期開始 (POST /period)
     func startPeriod(_ dto: PeriodStartRequestDTO) async throws -> Period {
         let responseDTO: PeriodStartResponseDTO =

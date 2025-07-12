@@ -12,16 +12,16 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var showModal = true
-    @State private var modifyModal = false
-    
+    @StateObject private var viewModel = HomeViewModel(periodRepository: MockPeriodRepository())
+
     var body: some View {
         ZStack{
-            if showModal {
+            if viewModel.showModal {
                 Color.black.opacity(0.2)
                     .ignoresSafeArea()
                 RecordModalView(
-                    showModal: $showModal
+                    showModal: $viewModel.showModal,
+                    isStart: viewModel.isStartModal
                 )
             } else {
                 VStack {
@@ -34,7 +34,7 @@ struct HomeView: View {
                         Spacer()
                         // 月経期間の修正モーダル
                         Button(action: {
-                            modifyModal = true
+                            viewModel.showModifyModal = true
                         }) {
                             Image(systemName: "square.and.pencil")
                                 .font(.title)
@@ -45,6 +45,9 @@ struct HomeView: View {
                     CalendarView(viewModel: CalendarViewModel(periodRepository: MockPeriodRepository()))
                 }
             }
+        }
+        .task {
+            await viewModel.loadModalState()
         }
     }
 }
