@@ -64,6 +64,22 @@ class PeriodBase(BaseModel):
     # end_dateは通常、後から更新されるため、ここではオプションにしておく
     end_date: Optional[date] = None # <-- ここを修正: Optional[date] = None が正しい
 
+class PeriodCreateResponse(BaseModel):
+    id: int
+    user_id: int
+    start_date: date
+    prediction_end_date: Optional[date] = None # この生理の予測終了日として
+    created_at: datetime
+
+class PeriodFullResponse(BaseModel):
+    id: int
+    user_id: int
+    start_date: date
+    end_date: Optional[date] = None # 更新時に設定される可能性
+    prediction_next_start_date: Optional[date] = None # 更新時に計算される可能性
+    prediction_end_date: Optional[date] = None
+    created_at: datetime
+    updated_at: datetime # 更新時に設定される
 class PeriodCreate(PeriodBase):
     # 新規作成時にend_dateも提供される可能性があるため、Baseを継承しつつ、
     # 必要に応じてend_dateにNone以外の値も許可する
@@ -78,9 +94,9 @@ class PeriodResponse(PeriodBase):
     id: int
     user_id: int
     prediction_next_start_date: Optional[date] = None
-    prediction_next_end_date: Optional[date] = None
+    prediction_end_date: Optional[date] = None
     created_at: datetime
-    updated_at: datetime
+    #updated_at: datetime
     class Config:
         orm_mode = True
 

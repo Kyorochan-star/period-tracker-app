@@ -46,7 +46,7 @@ class Period(Base):
     # 次回生理の開始予測日
     prediction_next_start_date = Column(Date, nullable=True)
     # 次回生理の終了予測日 (フィールド名を変更)
-    prediction_next_end_date = Column(Date, nullable=True)
+    prediction_end_date = Column(Date, nullable=True)
     created_at = Column(DateTime, default=func.now(), nullable=False)
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)
 

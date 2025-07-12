@@ -13,6 +13,7 @@ import Foundation
 
 struct RecordModalView: View {
     @Binding var showModal: Bool
+    let isStart: Bool // true = 生理開始, false = 生理終了
     
     var body: some View {
             VStack(spacing: 8) {
@@ -29,7 +30,7 @@ struct RecordModalView: View {
                 }
                 .frame(height: 0)
                 VStack(spacing: 6){
-                    Text("今日の記録")
+                    Text(isStart ? "今日の記録" : "終了の記録")
                         .bold()
                         .padding(.bottom, 7)
                     Text("2025年7月4日")
@@ -44,16 +45,16 @@ struct RecordModalView: View {
                     Button(action: {
                         showModal = false
                     }) {
-                        Text("生理開始")
+                        Text(isStart ? "生理開始" : "生理終了")
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.red.opacity(0.05))
-                            .foregroundColor(.red)
+                            .background(isStart ? Color.red.opacity(0.05) : Color.blue.opacity(0.05))
+                            .foregroundColor(isStart ? .red : .blue)
                             .cornerRadius(8)
                     }
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color.red, lineWidth: 1)
+                            .stroke(isStart ? Color.red : Color.blue, lineWidth: 1)
                     )
                     .frame(maxWidth: .infinity)
                     .padding(.horizontal)

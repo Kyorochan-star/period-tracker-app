@@ -9,40 +9,42 @@
 
 import SwiftUI
 
-struct ChatMessage: Identifiable {
-    let id: UUID = UUID()
-    let text: String
-    let isUser: Bool
-}
 
 struct ChatView: View {
-    @State private var messages: [ChatMessage] = []
-    @State private var inputText: String = ""
+    @StateObject private var viewModel: ChatViewModel
+
+    // 初期化時に外部から ViewModel を受け取って StateObject に昇格させる
+    init(viewModel: ChatViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
+
+
     var body: some View {
         VStack (spacing: 0){
             HStack(spacing: 10) {
-                Image(systemName: "message.circle.fill")
+                Image(systemName: viewModel.mode.iconName)
                     .resizable()
                     .frame(width: 30, height: 30)
                     .foregroundColor(.blue)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("相談チャット")
+                    Text(viewModel.mode.title)
                         .font(.title)
                         .bold()
-                    Text("気軽に相談してみましょう")
+                    Text(viewModel.mode.description)
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
                 Spacer()
             }
             .padding()
+
             Divider()
             ScrollViewReader { scrollProxy in
                 ScrollView{
                     VStack(alignment: .leading, spacing: 8){
-                        ForEach(messages) { message in
+                        ForEach(viewModel.messages, id: \.id) { message in
                             HStack {
-                                if message.isUser {
+                                if message.role == "user" {
                                     Spacer()
                                     Text(message.text)
                                         .padding()
@@ -51,7 +53,7 @@ struct ChatView: View {
                                     VStack {
                                         Image(systemName: "person.fill")
                                             .foregroundColor(.green)
-                                        Text("ユーザー")
+                                        Text("あなた")
                                             .font(.caption2)
                                             .foregroundColor(.secondary)
                                     }
@@ -59,7 +61,7 @@ struct ChatView: View {
                                     VStack {
                                         Image(systemName: "bubble.left.fill")
                                             .foregroundColor(.gray)
-                                        Text("ボット")
+                                        Text(viewModel.mode.title)
                                             .font(.caption2)
                                             .foregroundColor(.secondary)
                                     }
@@ -71,12 +73,13 @@ struct ChatView: View {
                                 }
                             }
                             .id(message.id)
+                            .padding(.vertical, 4)
                         }
                     }
                     .padding()
                 }
-                .onChange(of: messages.count) { _ in
-                    if let last = messages.last {
+                .onChange(of: viewModel.messages.count) { _ in
+                    if let last = viewModel.messages.last {
                         withAnimation {
                             scrollProxy.scrollTo(last.id, anchor: .bottom)
                         }
@@ -86,16 +89,20 @@ struct ChatView: View {
             
             
             HStack {
-                TextField("メッセージを入力...", text: $inputText)
+                TextField("メッセージを入力...", text: $viewModel.text)
                     .padding(12)
                     .background(Color(UIColor.secondarySystemBackground))
                     .clipShape(Capsule())
                     .font(.body)
                     .onSubmit{
-                        sendMessage()
+                        Task {
+                            await viewModel.sendMessage()
+                        }
                     }
                 Button(action: {
-                    sendMessage()
+                    Task {
+                        await viewModel.sendMessage()
+                    }
                 }) {
                     Text("送信")
                         .padding(.horizontal, 16)
@@ -111,17 +118,9 @@ struct ChatView: View {
         .background(Color(UIColor.systemBackground))
     }
     
-    func sendMessage() {
-        let trimmedText = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedText.isEmpty else { return }
-        messages.append(ChatMessage(text: trimmedText, isUser: true))
-        let response = "こんにちは、デモの応答です。"
-        messages.append(ChatMessage(text: response, isUser:false))
-        inputText = "" // Clear input field after sending
-    }
     
 }
 
 #Preview {
-    ChatView()
+    ChatView(viewModel: ChatViewModel(chatRepository: MockChatRepository(), mode: ChatMode(id: "default", title: "デフォルト", description: "説明", iconName: "message")))
 }
