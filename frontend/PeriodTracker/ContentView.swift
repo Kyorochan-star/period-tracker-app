@@ -21,7 +21,7 @@ struct ContentView: View {
     var body: some View {
         if !isLoggedIn {
             LoginView(
-                // ログイン画面のビューモデルを注入
+                // ログイン画面のビューモデルを入れる
                 viewModel: LoginViewModel(userRepository: userRepository),
                 isLoggedIn: $isLoggedIn)
         } else{
