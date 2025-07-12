@@ -39,4 +39,10 @@ final class NetworkUserRepository: UserRepository {
             // 本番環境のAPIのURLに差し替え
         return responseDTO.toDomain()
     }
+    func sendResetPassword(_ dto: ForgotPasswordRequestDTO) async throws -> ForgotPasswordResponseDTO {
+        let responseDTO: ForgotPasswordResponseDTO = 
+            try await api.post("本番環境のAPIのURL", data: dto)
+            // 本番環境のAPIのURLに差し替え
+        return responseDTO
+    }
 }
