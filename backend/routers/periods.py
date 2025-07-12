@@ -72,6 +72,9 @@ async def read_periods(
     db: Session = Depends(get_db),
     start_date: date | None = Query(None, description="この日付以降に開始する生理期間をフィルタリングします (YYYY-MM-DD)。カレンダー表示には月の開始日を使用してください。"),
     end_date: date | None = Query(None, description="この日付以前に開始する生理期間をフィルタリングします (YYYY-MM-DD)。カレンダー表示には月の終了日を使用してください。"), # 「終了」ではなく「開始」に文言修正
+    limit: int | None = Query(None, description="取得するレコードの最大数"),
+    order_by: str = Query("start_date", description="ソートするカラム名 (例: start_date, created_at)"),
+    order_direction: str = Query("desc", description="ソート順 (asc:昇順, desc:降順)"),
 ):
     # crud.get_periods にフィルタリング引数を渡す
     periods = crud.get_periods(
@@ -79,6 +82,9 @@ async def read_periods(
         user_id=current_user.id,
         start_date=start_date,
         end_date=end_date,
+        limit=limit, # crud関数に渡す
+        order_by=order_by, # crud関数に渡す
+        order_direction=order_direction, # crud関数に渡す
     )
     return periods
 
