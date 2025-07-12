@@ -22,8 +22,8 @@ struct LoginView: View {
                     ]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
-                    )
-                    .ignoresSafeArea()
+                )
+                .ignoresSafeArea()
                 VStack(spacing: 16) {
                     ZStack {
                         Circle()
@@ -38,116 +38,120 @@ struct LoginView: View {
                                 )
                             )
                             .frame(width: 80, height: 80)
-
+                        
                         Image(systemName: "heart.fill")
                             .resizable()
                             .scaledToFit()
                             .frame(width: 38, height: 40)
                             .foregroundColor(.white)
                     }
-                        
-                        Text("PeriodCare")
-                            .font(.title)
-                            .fontWeight(.bold)
-                        
-                        Text("ログイン")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                        
-                        Text("あなたの健康をサポート")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        
-                        TextField("メールアドレス", text: $viewModel.email)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding(.horizontal)
-                        
-                        SecureField("パスワード", text: $viewModel.password)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding(.horizontal)
-                        
-
-
-
-                        Button(action: {
-                            // LoginViewModel.login()は非同期関数だが、
-                            // Buttonのactionは非同期関数ではないため、
-                            // Taskでラップする必要がある
-                            Task {
-                                await viewModel.login()
-                                if viewModel.isLoggedIn {
-                                    isLoggedIn = true
-                                }
-                            }
-                        }) {
-                            Text("ログイン")
-                                .fontWeight(.bold)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(
-                                            LinearGradient(
-                                                gradient: Gradient(colors: [
-                                                    Color(red: 0.0, green: 0.6, blue: 0.99),
-                                                    Color(red: 0.1, green: 0.82, blue: 0.95)
-                                                ]),
-                                                startPoint: .topLeading,
-                                                endPoint: .bottomTrailing
-                                            )
-                                        )
-                                .foregroundColor(.white)
-                                .cornerRadius(15)
-                        }
-                        .padding(.horizontal)
-                    NavigationLink(destination: ResetPasswordView(viewModel: ResetPasswordViewModel(userRepository: MockUserRepository()))) {
-                        Text("パスワードをお忘れの方はこちら")
-                                .font(.footnote)
-                                .foregroundColor(.blue)
-                        }
-                        .padding(.horizontal)
-
-                    Divider()
-                        
-                        Button(action: {
-                            // Googleログイン処理
-                        }) {
-                            Text("Google でログイン")
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(.white)
-                                .foregroundColor(.black)
-                                .overlay(
-                                            RoundedRectangle(cornerRadius: 15)
-                                                .stroke(Color.gray.opacity(0.5), lineWidth: 1)
-                                        )
-                                .cornerRadius(15)
-                        }
-                        .padding(.horizontal)
-                        Divider()
-                        Text("登録がお済みでない方はこちら")
-                            .font(.caption)
-
-                        NavigationLink(destination: SignUpView(viewModel: SignUpViewModel(userRepository: MockUserRepository()))) {
-                            Text("新規登録")
-                                .font(.system(size: 16.9))
-                                .fontWeight(.bold)
-                                .padding()
-                                .foregroundColor(.blue)
-                        }
+                    .padding(.top, 19)
+                    
+                    Text("PeriodCare")
+                        .font(.title)
+                        .fontWeight(.bold)
+                    
+                    Text("あなたの健康をサポート")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                    
+                    Text("ログイン")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    
+                    TextField("メールアドレス", text: $viewModel.email)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
                     
+                    SecureField("パスワード", text: $viewModel.password)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.horizontal)
+                    
+                    
+                    Button(action: {
+                        // LoginViewModel.login()は非同期関数だが、
+                        // Buttonのactionは非同期関数ではないため、
+                        // Taskでラップする必要がある
+                        Task {
+                            await viewModel.login()
+                            if viewModel.isLoggedIn {
+                                isLoggedIn = true
+                            }
+                        }
+                    }) {
+                        Text("ログイン")
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [
+                                        Color(red: 0.0, green: 0.6, blue: 0.99),
+                                        Color(red: 0.1, green: 0.82, blue: 0.95)
+                                    ]),
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .foregroundColor(.white)
+                            .cornerRadius(15)
+                    }
+                    .padding(.horizontal)
+                    
+                    NavigationLink(destination: ResetPasswordView(viewModel: ResetPasswordViewModel(userRepository: MockUserRepository()))) {
+                        (
+                            Text("パスワードをお忘れの方は")
+                                .foregroundColor(.black)
+                            +
+                            Text("こちら")
+                                .fontWeight(.bold)
+                                .foregroundColor(.blue)
+                        )
+                        .font(.footnote)
+                    }
+                    .padding(.horizontal)
+                    
+                    Divider()
+                    
+                    Button(action: {
+                        // Googleログイン処理
+                    }) {
+                        Text("Google でログイン")
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(.white)
+                            .foregroundColor(.black)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .stroke(Color.gray.opacity(0.5), lineWidth: 1)
+                            )
+                            .cornerRadius(15)
+                    }
+                    .padding(.horizontal)
+                    
+                    NavigationLink(destination: SignUpView(viewModel: SignUpViewModel(userRepository: MockUserRepository()))) {
+                        Text("新規登録")
+                            .font(.system(size: 16.9))
+                            .fontWeight(.bold)
+                            .padding()
+                            .foregroundColor(.blue)
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom, 12)
                 }
                 .frame(width: UIScreen.main.bounds.width * 0.8,
-                       height: UIScreen.main.bounds.height * 0.7)
+                       height: UIScreen.main.bounds.height * 0.75)
                 .background(Color.white)
                 .cornerRadius(20)
-                .shadow(radius:10)
+                .shadow(radius: 10)
             }
         }
     }
 }
-
-#Preview {
-    LoginView(
-        viewModel: LoginViewModel(userRepository: MockUserRepository()),
-        isLoggedIn: .constant(false))
-}
+    
+    #Preview {
+        LoginView(
+            viewModel: LoginViewModel(userRepository: MockUserRepository()),
+            isLoggedIn: .constant(false))
+    }
