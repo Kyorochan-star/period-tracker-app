@@ -50,6 +50,10 @@ struct LoginView: View {
                             .font(.title)
                             .fontWeight(.bold)
                         
+                        Text("ログイン")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                        
                         Text("あなたの健康をサポート")
                             .font(.caption)
                             .foregroundColor(.gray)
@@ -62,7 +66,9 @@ struct LoginView: View {
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding(.horizontal)
                         
-                        
+
+
+
                         Button(action: {
                             // LoginViewModel.login()は非同期関数だが、
                             // Buttonのactionは非同期関数ではないため、
@@ -92,19 +98,13 @@ struct LoginView: View {
                                 .cornerRadius(15)
                         }
                         .padding(.horizontal)
-                    
-                    Button(action: {
-                        // パスワードリセット処理
-                    }) {
-                        (
-                            Text("パスワードをお忘れの方は")
-                                .foregroundColor(.black)
-                            +
-                            Text("こちら")
+                    NavigationLink(destination: ResetPasswordView(viewModel: ResetPasswordViewModel(userRepository: MockUserRepository()))) {
+                        Text("パスワードをお忘れの方はこちら")
+                                .font(.footnote)
                                 .foregroundColor(.blue)
-                        )
-                        .font(.footnote)
-                    }
+                        }
+                        .padding(.horizontal)
+
                     Divider()
                         
                         Button(action: {
@@ -122,8 +122,11 @@ struct LoginView: View {
                                 .cornerRadius(15)
                         }
                         .padding(.horizontal)
-                    
-                        NavigationLink(destination: SignUpView()) {
+                        Divider()
+                        Text("登録がお済みでない方はこちら")
+                            .font(.caption)
+
+                        NavigationLink(destination: SignUpView(viewModel: SignUpViewModel(userRepository: MockUserRepository()))) {
                             Text("新規登録")
                                 .font(.system(size: 16.9))
                                 .fontWeight(.bold)

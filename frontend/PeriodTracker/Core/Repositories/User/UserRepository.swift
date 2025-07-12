@@ -11,6 +11,8 @@ protocol UserRepository {
     func login(_ request: UserLoginRequestDTO) async throws -> User 
     // ユーザープロフィール取得
     func fetchProfile() async throws -> User 
+    // パスワード再設定要求
+    func sendResetPassword(_ request: ForgotPasswordRequestDTO) async throws -> ForgotPasswordResponseDTO
 }
 
 // _ requestは呼び出し側でラベルを書く必要がない
