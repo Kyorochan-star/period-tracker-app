@@ -15,14 +15,36 @@ struct LoginView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.blue.opacity(0.1)
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color(red: 0.8, green: 0.95, blue: 1.0),
+                        Color(red: 0.92, green: 0.96, blue: 1.0)
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                    )
                     .ignoresSafeArea()
                 VStack(spacing: 16) {
+                    ZStack {
+                        Circle()
+                            .fill(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [
+                                        Color(red: 0.0, green: 0.6, blue: 0.99),
+                                        Color(red: 0.1, green: 0.85, blue: 0.95)
+                                    ]),
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .frame(width: 80, height: 80)
+
                         Image(systemName: "heart.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 50, height: 50)
-                            .foregroundColor(.blue)
+                            .frame(width: 38, height: 40)
+                            .foregroundColor(.white)
+                    }
                         
                         Text("PeriodCare")
                             .font(.title)
@@ -44,12 +66,7 @@ struct LoginView: View {
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding(.horizontal)
                         
-                        NavigationLink(destination: ResetPasswordView(viewModel: ResetPasswordViewModel(userRepository: MockUserRepository()))) {
-                            Text("パスワードをお忘れの方はこちら")
-                                .font(.footnote)
-                                .foregroundColor(.blue)
-                        }
-                        .padding(.horizontal)
+
 
 
                         Button(action: {
@@ -64,15 +81,31 @@ struct LoginView: View {
                             }
                         }) {
                             Text("ログイン")
+                                .fontWeight(.bold)
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(Color.blue)
+                                .background(
+                                            LinearGradient(
+                                                gradient: Gradient(colors: [
+                                                    Color(red: 0.0, green: 0.6, blue: 0.99),
+                                                    Color(red: 0.1, green: 0.82, blue: 0.95)
+                                                ]),
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            )
+                                        )
                                 .foregroundColor(.white)
-                                .cornerRadius(8)
+                                .cornerRadius(15)
                         }
                         .padding(.horizontal)
-                        
-                        
+                    NavigationLink(destination: ResetPasswordView(viewModel: ResetPasswordViewModel(userRepository: MockUserRepository()))) {
+                        Text("パスワードをお忘れの方はこちら")
+                                .font(.footnote)
+                                .foregroundColor(.blue)
+                        }
+                        .padding(.horizontal)
+
+                    Divider()
                         
                         Button(action: {
                             // Googleログイン処理
@@ -80,9 +113,13 @@ struct LoginView: View {
                             Text("Google でログイン")
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(Color.gray.opacity(0.2))
+                                .background(.white)
                                 .foregroundColor(.black)
-                                .cornerRadius(8)
+                                .overlay(
+                                            RoundedRectangle(cornerRadius: 15)
+                                                .stroke(Color.gray.opacity(0.5), lineWidth: 1)
+                                        )
+                                .cornerRadius(15)
                         }
                         .padding(.horizontal)
                         Divider()
@@ -91,11 +128,10 @@ struct LoginView: View {
 
                         NavigationLink(destination: SignUpView(viewModel: SignUpViewModel(userRepository: MockUserRepository()))) {
                             Text("新規登録")
-                                .frame(maxWidth: .infinity)
+                                .font(.system(size: 16.9))
+                                .fontWeight(.bold)
                                 .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
+                                .foregroundColor(.blue)
                         }
                         .padding(.horizontal)
                     
