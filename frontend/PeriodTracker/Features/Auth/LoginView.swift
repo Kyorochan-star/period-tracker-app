@@ -83,7 +83,7 @@ struct LoginView: View {
                         Divider()
                         Text("登録がお済みでない方はこちら")
                             .font(.caption)
-                        NavigationLink(destination: SignUpView()) {
+                        NavigationLink(destination: SignUpView(viewModel: SignUpViewModel(userRepository: MockUserRepository()))) {
                             Text("新規登録")
                                 .frame(maxWidth: .infinity)
                                 .padding()
