@@ -14,7 +14,6 @@ import Foundation
 
 // 開始ボタン request型定義
 struct PeriodStartRequestDTO: Codable {
-    let id : Int 
     let startdate: String
 }
 
@@ -32,7 +31,7 @@ struct PeriodStartResponseDTO: Codable {
 
 extension PeriodStartResponseDTO {
     func toDomain() -> Period {
-        return Period(id: id, userid: userid, startdate: startdate, enddate: enddate, prediction_next_date: prediction_next_date)
+        return Period(id: id, userid: userid, startdate: startdate, enddate: enddate, prediction_next_date: prediction_next_date, created_at: created_at)
     }
 }
 
@@ -57,7 +56,7 @@ struct PeriodEndResponseDTO: Codable {
 
 extension PeriodEndResponseDTO {
     func toDomain() -> Period {
-        return Period(id: id, userid: userid, startdate: startdate, enddate: enddate, prediction_next_date: prediction_next_date)
+        return Period(id: id, userid: userid, startdate: startdate, enddate: enddate, prediction_next_date: prediction_next_date, created_at: created_at)
     }
 }
 
@@ -80,6 +79,6 @@ struct PeriodCalendarResponseDTO: Codable {
 
 extension PeriodCalendarResponseDTO {
     func toDomain() -> Period {
-        return Period(id: id, userid: userid, startdate: startdate, enddate: enddate, prediction_next_date: prediction_next_date)
+        return Period(id: id, userid: userid, startdate: startdate, enddate: enddate, prediction_next_date: prediction_next_date, created_at: created_at)
     }
 }

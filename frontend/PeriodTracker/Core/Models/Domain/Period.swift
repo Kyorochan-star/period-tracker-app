@@ -18,4 +18,5 @@ struct Period: Identifiable {
     let startdate: String 
     let enddate: String 
     let prediction_next_date: String 
+    let created_at: String 
 }
