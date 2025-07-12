@@ -11,6 +11,7 @@
 
 import Foundation 
 
+/// NOTE: モック実装だが実 API に合わせてパスを `/auth/*` へ統一。
 final class MockUserRepository: UserRepository {
 
     private let api = APIService()
@@ -18,25 +19,25 @@ final class MockUserRepository: UserRepository {
 
     func register(_ dto: UserRegisterRequestDTO) async throws -> User {
         let responseDTO: UserRegisterResponseDTO = 
-            try await api.post("http://127.0.0.1:8000/register", data: dto)
+            try await api.post("/auth/register", data: dto)
         return responseDTO.toDomain()
     }
     func login(_ dto: UserLoginRequestDTO) async throws -> User {
         let responseDTO: UserLoginResponseDTO = 
-            try await api.post("http://127.0.0.1:8000/login", data: dto)
+            try await api.post("/auth/login", data: dto)
         return responseDTO.toDomain()
     }
 
     // パスワード再設定要求
     func sendResetPassword(_ dto: ForgotPasswordRequestDTO) async throws -> ForgotPasswordResponseDTO {
         let responseDTO: ForgotPasswordResponseDTO = 
-            try await api.post("http://127.0.0.1:8000/forgot-password", data: dto)
+            try await api.post("/auth/forgot-password", data: dto)
         return responseDTO
     }
 
     func fetchProfile() async throws -> User {
         let responseDTO: UserProfileResponseDTO = 
-            try await api.get("http://127.0.0.1:8000/me")
+            try await api.get("/auth/me")
         return responseDTO.toDomain()
     }
 }

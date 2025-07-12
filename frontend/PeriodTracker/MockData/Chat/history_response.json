@@ -5,7 +5,7 @@
       "role": "assistant",
       "query": "生理周期が不安定です。",
       "response": "ストレスや生活習慣も影響するから、まずは規則正しい生活を心がけましょう。",
-      "mode": "nurse",
+      "mode": "NURSE",
       "timestamp": "2025-07-10T14:12:30Z"
     },
     {
@@ -14,7 +14,7 @@
       "role": "assistant",
       "query": "生理痛がつらいです…",
       "response": "休んで温かい飲み物を飲むと少し楽になるかもしれないわよ。",
-      "mode": "prince",
+      "mode": "PRINCE",
       "timestamp": "2025-07-11T12:30:45Z"
     }
   ] 

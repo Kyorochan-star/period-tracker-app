@@ -20,10 +20,30 @@
 import Foundation 
 
 class APIService{
-    func get<T : Codable> (_ url: String, queryItems: [URLQueryItem]? = nil, completion: @escaping (Result<T, Error>) -> Void) {
-        var urlComponents = URLComponents(string: url)!
+    // JWTヘッダー自動付与
+    private var token: String? { 
+        UserDefaults.standard.string(forKey: "authToken")
+    }
+    private func makeRequest(
+        url: URL, 
+        method: String, 
+        body: Data? = nil
+    ) -> URLRequest { 
+        var request = URLRequest(url: url)
+        request.httpMethod = method 
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let token { 
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        request.httpBody = body 
+        return request 
+    }
+
+
+    func get<T : Codable> (_ path: String, queryItems: [URLQueryItem]? = nil, completion: @escaping (Result<T, Error>) -> Void) {
+        var urlComponents = URLComponents(string: APIConfig.baseURL + path)!
         urlComponents.queryItems = queryItems 
-        let request = URLRequest(url: urlComponents.url!)
+        let request = makeRequest(url: urlComponents.url!, method: "GET")
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 completion(.failure(error))
@@ -39,13 +59,9 @@ class APIService{
         task.resume()
     }
     
-    func post<T: Codable, U: Codable>(_ url: String, data: T, completion: @escaping (Result<U, Error>) -> Void) {
-        var request = URLRequest(url: URL(string: url)!)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let encoder = JSONEncoder()
-        let jsonData = try? encoder.encode(data)
-        request.httpBody = jsonData
+    func post<T: Codable, U: Codable>(_ path: String, data: T, completion: @escaping (Result<U, Error>) -> Void) {
+        var urlComponents = URLComponents(string: APIConfig.baseURL + path)!
+        let request = makeRequest(url: urlComponents.url!, method: "POST", body: try? JSONEncoder().encode(data))
         
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
@@ -62,13 +78,9 @@ class APIService{
         task.resume()
     }
 
-    func patch<T: Codable, U: Codable>(_ url: String, data: T, completion: @escaping (Result<U, Error>) -> Void) {
-        var request = URLRequest(url: URL(string: url)!)
-        request.httpMethod = "PATCH"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let encoder = JSONEncoder()
-        let jsonData = try? encoder.encode(data)
-        request.httpBody = jsonData
+    func patch<T: Codable, U: Codable>(_ path: String, data: T, completion: @escaping (Result<U, Error>) -> Void) {
+        var urlComponents = URLComponents(string: APIConfig.baseURL + path)!
+        let request = makeRequest(url: urlComponents.url!, method: "PATCH", body: try? JSONEncoder().encode(data))
         
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
@@ -89,12 +101,12 @@ class APIService{
 
 extension APIService {
     // GET
-    func get<U: Decodable>(_ url: String,
+    func get<U: Decodable>(_ path: String,
                            queryItems: [URLQueryItem]? = nil) async throws -> U {
 
-        var components = URLComponents(string: url)!
+        var components = URLComponents(string: APIConfig.baseURL + path)!
         components.queryItems = queryItems
-        let request = URLRequest(url: components.url!)
+        let request = makeRequest(url: components.url!, method: "GET")
 
         let (data, response) = try await URLSession.shared.data(for: request)
 
@@ -103,12 +115,10 @@ extension APIService {
     }
 
     // POST
-    func post<T: Encodable, U: Decodable>(_ url: String, data: T) async throws -> U {
+    func post<T: Encodable, U: Decodable>(_ path: String, data: T) async throws -> U {
 
-        var request = URLRequest(url: URL(string: url)!)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONEncoder().encode(data)
+        var urlComponents = URLComponents(string: APIConfig.baseURL + path)!
+        let request = makeRequest(url: urlComponents.url!, method: "POST", body: try? JSONEncoder().encode(data))
 
         let (data, response) = try await URLSession.shared.data(for: request)
 
@@ -117,12 +127,10 @@ extension APIService {
     }
 
     // PATCH 
-    func patch<T: Encodable, U: Decodable>(_ url: String, data: T) async throws -> U {
+    func patch<T: Encodable, U: Decodable>(_ path: String, data: T) async throws -> U {
 
-    var request = URLRequest(url: URL(string: url)!)
-    request.httpMethod = "PATCH"
-    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    request.httpBody = try JSONEncoder().encode(data)
+        var urlComponents = URLComponents(string: APIConfig.baseURL + path)!
+        let request = makeRequest(url: urlComponents.url!, method: "PATCH", body: try? JSONEncoder().encode(data))
 
     let (data, response) = try await URLSession.shared.data(for: request)
 

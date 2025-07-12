@@ -23,7 +23,7 @@ struct TestAPIView: View {
                 Button("Test /register (POST)") {
                     let apiService = APIService()
                     let registerData = UserRegisterRequestDTO(email: "test@example.com", password: "password", name: "テストユーザー")
-                    apiService.post("http://127.0.0.1:8000/register", data: registerData) { (result: Result<UserRegisterResponseDTO, Error>) in
+                    apiService.post("\(APIConfig.baseURL)/auth/register", data: registerData) { (result: Result<UserRegisterResponseDTO, Error>) in
                         switch result {
                         case .success(let data):
                             resultText = "register: \(data)"
@@ -36,7 +36,7 @@ struct TestAPIView: View {
                 Button("Test /login (POST)") {
                     let apiService = APIService()
                     let loginData = UserLoginRequestDTO(email: "test@example.com", hashed_password: "password")
-                    apiService.post("http://127.0.0.1:8000/login", data: loginData) { (result: Result<UserLoginResponseDTO, Error>) in
+                    apiService.post("\(APIConfig.baseURL)/auth/login", data: loginData) { (result: Result<UserLoginResponseDTO, Error>) in
                         switch result {
                         case .success(let data):
                             resultText = "login: \(data)"
@@ -49,7 +49,7 @@ struct TestAPIView: View {
                 Button("Test /google (POST)") {
                     let apiService = APIService()
                     let googleData = ["id_token_str": "sample_id_token"] // 必要ならDTO化
-                    apiService.post("http://127.0.0.1:8000/google", data: googleData) { (result: Result<UserLoginResponseDTO, Error>) in
+                    apiService.post("\(APIConfig.baseURL)/auth/google", data: googleData) { (result: Result<UserLoginResponseDTO, Error>) in
                         switch result {
                         case .success(let data):
                             resultText = "google: \(data)"
@@ -62,7 +62,7 @@ struct TestAPIView: View {
                 Button("Test /forgot-password (POST)") {
                     let apiService = APIService()
                     let forgotData = ForgotPasswordRequestDTO(email: "test@example.com")
-                    apiService.post("http://127.0.0.1:8000/forgot-password", data: forgotData) { (result: Result<ForgotPasswordResponseDTO, Error>) in
+                    apiService.post("\(APIConfig.baseURL)/auth/forgot-password", data: forgotData) { (result: Result<ForgotPasswordResponseDTO, Error>) in
                         switch result {
                         case .success(let data):
                             resultText = "forgot-password: \(data)"
@@ -75,7 +75,7 @@ struct TestAPIView: View {
                 Button("Test /reset-password (POST)") {
                     let apiService = APIService()
                     let resetData = ResetPasswordRequestDTO(token: "sampletoken", password: "newpassword")
-                    apiService.post("http://127.0.0.1:8000/reset-password", data: resetData) { (result: Result<ResetPasswordResponseDTO, Error>) in
+                    apiService.post("\(APIConfig.baseURL)/auth/reset-password", data: resetData) { (result: Result<ResetPasswordResponseDTO, Error>) in
                         switch result {
                         case .success(let data):
                             resultText = "reset-password: \(data)"
@@ -87,7 +87,7 @@ struct TestAPIView: View {
                 // /me (GET)
                 Button("Test /me (GET)") {
                     let apiService = APIService()
-                    apiService.get("http://127.0.0.1:8000/me") { (result: Result<UserProfileResponseDTO, Error>) in
+                    apiService.get("\(APIConfig.baseURL)/auth/me") { (result: Result<UserProfileResponseDTO, Error>) in
                         switch result {
                         case .success(let data):
                             resultText = "me: \(data)"
@@ -100,7 +100,7 @@ struct TestAPIView: View {
                 Button("Test /period (POST)") {
                     let apiService = APIService()
                     let periodData = PeriodStartRequestDTO(startdate: "2025-07-11")
-                    apiService.post("http://127.0.0.1:8000/period", data: periodData) { (result: Result<PeriodStartResponseDTO, Error>) in
+                    apiService.post("\(APIConfig.baseURL)/periods", data: periodData) { (result: Result<PeriodStartResponseDTO, Error>) in
                         switch result {
                         case .success(let data):
                             resultText = "period post: \(data)"
@@ -113,7 +113,7 @@ struct TestAPIView: View {
                 Button("Test /period (PATCH)") {
                     let apiService = APIService()
                     let periodUpdate = PeriodEndRequestDTO(id: 1, userid: 1, enddate: "2025-07-17")
-                    apiService.patch("http://127.0.0.1:8000/period/1", data: periodUpdate) { (result: Result<PeriodEndResponseDTO, Error>) in
+                    apiService.patch("\(APIConfig.baseURL)/periods/1", data: periodUpdate) { (result: Result<PeriodEndResponseDTO, Error>) in
                         switch result {
                         case .success(let data):
                             resultText = "period patch: \(data)"
@@ -125,7 +125,7 @@ struct TestAPIView: View {
                 // /period (GET)
                 Button("Test /period (GET)") {
                     let apiService = APIService()
-                    apiService.get("http://127.0.0.1:8000/period") { (result: Result<PeriodCalendarResponseDTO, Error>) in
+                    apiService.get("\(APIConfig.baseURL)/periods") { (result: Result<PeriodCalendarResponseDTO, Error>) in
                         switch result {
                         case .success(let data):
                             resultText = "period: \(data)"
@@ -136,7 +136,7 @@ struct TestAPIView: View {
                 }
                 // /period (DELETE)
                 Button("Test /period (DELETE)") {
-                    let url = URL(string: "http://127.0.0.1:8000/period/1")!
+                    let url = URL(string: "\(APIConfig.baseURL)/periods/1")!
                     var request = URLRequest(url: url)
                     request.httpMethod = "DELETE"
                     let task = URLSession.shared.dataTask(with: request) { data, response, error in
@@ -152,7 +152,7 @@ struct TestAPIView: View {
                 Button("Test /chat (POST)") {
                     let apiService = APIService()
                     let chatData = ChatSendRequestDTO(query: "生理痛がつらいです…",
-                                                      role:"user",mode: "王子様モード")
+                                                      role: "user", mode: "PRINCE")
                     apiService.post("http://127.0.0.1:8000/chat", data: chatData) { (result: Result<ChatSendResponseDTO, Error>) in
                         switch result {
                         case .success(let data):
