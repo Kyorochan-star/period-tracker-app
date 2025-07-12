@@ -26,6 +26,14 @@ final class MockUserRepository: UserRepository {
             try await api.post("http://127.0.0.1:8000/login", data: dto)
         return responseDTO.toDomain()
     }
+
+    // パスワード再設定要求
+    func sendResetPassword(_ dto: ForgotPasswordRequestDTO) async throws -> ForgotPasswordResponseDTO {
+        let responseDTO: ForgotPasswordResponseDTO = 
+            try await api.post("http://127.0.0.1:8000/forgot-password", data: dto)
+        return responseDTO
+    }
+
     func fetchProfile() async throws -> User {
         let responseDTO: UserProfileResponseDTO = 
             try await api.get("http://127.0.0.1:8000/me")

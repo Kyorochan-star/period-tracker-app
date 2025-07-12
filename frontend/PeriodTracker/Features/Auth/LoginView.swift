@@ -28,6 +28,10 @@ struct LoginView: View {
                             .font(.title)
                             .fontWeight(.bold)
                         
+                        Text("ログイン")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                        
                         Text("あなたの健康をサポート")
                             .font(.caption)
                             .foregroundColor(.gray)
@@ -40,13 +44,14 @@ struct LoginView: View {
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding(.horizontal)
                         
-                        Button(action: {
-                            // パスワードリセット処理
-                        }) {
+                        NavigationLink(destination: ResetPasswordView(viewModel: ResetPasswordViewModel(userRepository: MockUserRepository()))) {
                             Text("パスワードをお忘れの方はこちら")
                                 .font(.footnote)
                                 .foregroundColor(.blue)
                         }
+                        .padding(.horizontal)
+
+
                         Button(action: {
                             // LoginViewModel.login()は非同期関数だが、
                             // Buttonのactionは非同期関数ではないため、
@@ -83,6 +88,7 @@ struct LoginView: View {
                         Divider()
                         Text("登録がお済みでない方はこちら")
                             .font(.caption)
+
                         NavigationLink(destination: SignUpView(viewModel: SignUpViewModel(userRepository: MockUserRepository()))) {
                             Text("新規登録")
                                 .frame(maxWidth: .infinity)

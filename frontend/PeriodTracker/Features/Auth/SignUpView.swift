@@ -26,6 +26,9 @@ struct SignUpView: View {
                 Text("PeriodCare")
                     .font(.title)
                     .fontWeight(.bold)
+                Text("新規登録")
+                    .font(.title2)
+                    .fontWeight(.bold)
                 
                 Text("あなたの健康をサポート")
                     .font(.caption)
