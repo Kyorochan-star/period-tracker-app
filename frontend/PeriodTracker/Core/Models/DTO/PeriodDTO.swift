@@ -30,6 +30,12 @@ struct PeriodStartResponseDTO: Codable {
     let updated_at : String 
 }
 
+extension PeriodStartResponseDTO {
+    func toDomain() -> Period {
+        return Period(id: id, userid: userid, startdate: startdate, enddate: enddate, prediction_next_date: prediction_next_date)
+    }
+}
+
 // 終了ボタン request型定義
 struct PeriodEndRequestDTO: Codable {
     let id : Int 
@@ -49,6 +55,12 @@ struct PeriodEndResponseDTO: Codable {
     let updated_at : String 
 } 
 
+extension PeriodEndResponseDTO {
+    func toDomain() -> Period {
+        return Period(id: id, userid: userid, startdate: startdate, enddate: enddate, prediction_next_date: prediction_next_date)
+    }
+}
+
 // カレンダー表示&6ヶ月分の表示 request型定義
 struct PeriodCalendarRequestDTO: Codable {
     let id : Int 
@@ -62,7 +74,12 @@ struct PeriodCalendarResponseDTO: Codable {
     let startdate : String 
     let enddate : String 
     let prediction_next_date : String 
-    let prediction_end_date : String 
     let created_at : String 
     let updated_at : String 
 } 
+
+extension PeriodCalendarResponseDTO {
+    func toDomain() -> Period {
+        return Period(id: id, userid: userid, startdate: startdate, enddate: enddate, prediction_next_date: prediction_next_date)
+    }
+}
