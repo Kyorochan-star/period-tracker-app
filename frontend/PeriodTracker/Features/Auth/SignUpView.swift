@@ -10,7 +10,8 @@
 import SwiftUI
 
 struct SignUpView: View {
-    @State private var isAgreementChecked = false
+    @StateObject var viewModel: SignUpViewModel
+    @Environment(\.dismiss) private var dismiss
     var body: some View {
         ZStack{
             Color.blue.opacity(0.1)
@@ -30,34 +31,28 @@ struct SignUpView: View {
                     .font(.caption)
                     .foregroundColor(.gray)
                 
-                TextField("お名前", text: .constant(""))
+                TextField("お名前", text: $viewModel.name)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 
-                TextField("メールアドレス", text: .constant(""))
+                TextField("メールアドレス", text: $viewModel.email)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 
-                SecureField("パスワード", text: .constant(""))
+                SecureField("パスワード", text: $viewModel.password)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 
-                SecureField("パスワード（確認）", text: .constant(""))
+                SecureField("パスワード（確認）", text: $viewModel.confirmPassword)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                
-                Button(action: {
-                    isAgreementChecked.toggle()
-                }) {
-                    HStack(alignment: .top) {
-                        Image(systemName: isAgreementChecked ? "checkmark.square" : "square")
-                            .padding(.top, 2)
-                        Text(.init("[利用規約](https://example.com/terms)及び[プライバシーポリシー](https://example.com/privacy)に同意してアカウントを作成します。"))
-                            .font(.footnote)
-                            .foregroundColor(.primary)
-                    }
-                }
-                .buttonStyle(PlainButtonStyle())
-                .padding()
                 
                 Button(action: {
                     // 登録処理
+                    Task {
+                        if await viewModel.signUp() {
+                            // 登録成功時の処理
+                            dismiss()
+                        } else {
+                            // 登録失敗時の処理
+                        }
+                    }
                 }) {
                     Text("新規登録")
                         .frame(maxWidth: .infinity)
@@ -80,5 +75,7 @@ struct SignUpView: View {
 }
 
 #Preview {
-    SignUpView()
+    SignUpView(
+        viewModel: SignUpViewModel(userRepository: MockUserRepository())
+        )
 }
