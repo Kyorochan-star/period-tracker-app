@@ -38,12 +38,13 @@ struct CalendarView: View {
 
     var body: some View {
         VStack {
-            Text("カレンダー")
-                .font(.title2)
-                .bold()
-                .frame(maxWidth: 350,alignment: .leading)
-            // Month and Year Header with Controls
             HStack {
+                Text("カレンダー")
+                    .font(.title2)
+                    .bold()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.top, 18)
+                
                 Button(action: {
                     if let newDate = calendar.date(byAdding: .month, value: -1, to: selectedDate) {
                         selectedDate = newDate
@@ -66,7 +67,8 @@ struct CalendarView: View {
             }
             .padding()
             .padding(.horizontal)
-
+            .background(Color.white)
+            
             // Top: Calendar Grid
             VStack {
                 LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 7), spacing: 8) {
@@ -75,7 +77,7 @@ struct CalendarView: View {
                             .font(.caption)
                             .frame(maxWidth: .infinity)
                     }
-
+                    
                     ForEach(monthDates, id: \.self) { date in
                         CalendarDateCell(date: date, isToday: calendar.isDateInToday(date), inPeriod: viewModel.isDateInPeriod(date))
                     }
@@ -87,34 +89,38 @@ struct CalendarView: View {
             .task {
                 await viewModel.fetchPeriods()
             }
+        }
+            .ignoresSafeArea(edges: .top)
+            .background(Color.white)
+            .padding(.horizontal)
 
-            Divider()
-
+        VStack {
             // Bottom: 直近6ヶ月分の生理記録
             VStack(alignment: .leading, spacing: 16) {
                 Text("直近6ヶ月分の生理記録")
-                    .font(.title)
+                    .font(.title3)
                     .bold()
-
+                    .background(Color.white)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
                 ForEach(viewModel.periods, id: \.id) { period in
                     VStack(alignment: .leading) {
-                    Text("\(period.startdate) ~ \(period.enddate)")
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .foregroundColor(Color.red.opacity(0.8))
+                        Text("\(period.startdate) ~ \(period.enddate)")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color.red.opacity(0.8))
                     }
-                    .padding()
-                    .frame(maxWidth: 350, maxHeight: 200)
-                    .background(Color.red.opacity(0.1))
-                    .cornerRadius(12)
                 }
             }
-            .padding()
-            .frame(maxWidth: 350)
-            .background(Color(UIColor.secondarySystemBackground))
-            .cornerRadius(12)
         }
+        .padding()
+        .frame(maxWidth: 350)
         .ignoresSafeArea(edges: .top)
+        .background(
+            Color.white
+                .cornerRadius(15)
+        )
+        .padding(.horizontal)
     }
 }
 
