@@ -24,7 +24,6 @@ struct PeriodStartResponseDTO: Codable {
     let startdate: String 
     let enddate : String 
     let prediction_next_date: String 
-    let prediction_end_date: String 
     let created_at: String 
     let updated_at : String 
 }
@@ -49,7 +48,6 @@ struct PeriodEndResponseDTO: Codable {
     let startdate : String 
     let enddate : String 
     let prediction_next_date : String 
-    let prediction_end_date : String 
     let created_at : String 
     let updated_at : String 
 } 
