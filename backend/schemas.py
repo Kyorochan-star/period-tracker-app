@@ -106,14 +106,24 @@ class PeriodResponse(PeriodBase):
 class Message(BaseModel):
     role: Literal["user", "assistant"]
     content: str
+
+class ChatMessageCreate(BaseModel):
+    mode: str  # "boyfriend", "prince", "nurse", "grandma", "mother"
+    messages: List[Message]
+
+class ChatMessageResponse(BaseModel):
+    id: int
+    user_id: int
+    mode: str
+    query: str
+    ai_response: str
+    created_at: datetime
     
+    class Config:
+        orm_mode = True
 
 class ChatRequest(BaseModel):
     mode: ChatMode
-    messages:List[Message]
-    
-
-class ChatMessageResponse(BaseModel):
     messages: List[Message]
 
 
