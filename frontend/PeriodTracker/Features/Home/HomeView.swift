@@ -42,7 +42,7 @@ struct HomeView: View {
                                 .padding(.trailing)
                         }
                     }
-                    CalendarView()
+                    CalendarView(viewModel: CalendarViewModel(periodRepository: MockPeriodRepository()))
                 }
             }
         }

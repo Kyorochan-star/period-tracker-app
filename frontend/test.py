@@ -70,7 +70,7 @@ async def create_period_entry_mock():
     return JSONResponse(content=mock_data, status_code=status.HTTP_201_CREATED)
 
 # ② 生理終了記録 / 生理期間更新
-@app.patch("/period/{period_id}", status_code=status.HTTP_200_OK)
+@app.post("/period/{period_id}", status_code=status.HTTP_200_OK)
 async def update_period_entry_mock(period_id: int):
     mock_path = "PeriodTracker/MockData/Period/end_response.json"
     with open(mock_path, "r", encoding="utf-8") as f:
@@ -78,27 +78,21 @@ async def update_period_entry_mock(period_id: int):
     return JSONResponse(content=mock_data, status_code=status.HTTP_200_OK)
 
 # ③ カレンダー表示＆六ヶ月分の表示
-@app.get("/period", status_code=status.HTTP_200_OK)
-async def read_periods_mock():
+@app.get("/periods", status_code=status.HTTP_200_OK)
+async def read_periods_mock(start_date: str | None = None, end_date: str | None = None):
     mock_path = "PeriodTracker/MockData/Period/calendar_response.json"
     with open(mock_path, "r", encoding="utf-8") as f:
         mock_data = json.load(f)
     return JSONResponse(content=mock_data, status_code=status.HTTP_200_OK)
 
-# 特定生理期間の取得
-# @app.get("/period/{period_id}", status_code=status.HTTP_200_OK)
-# async def read_single_period_mock(period_id: int):
-#     mock_path = "Period
-#     with open(mock_path, "r", encoding="utf-8") as f:
-#         mock_data = json.load(f)
-#     # 必要に応じてperiod_idでフィルタリングする処理を追加可能
-#     return JSONResponse(content=mock_data, status_code=status.HTTP_200_OK)
-
-# 生理期間の削除
-@app.delete("/period/{period_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_period_entry_mock(period_id: int):
-    # 削除は204 No Contentなのでボディなし
-    return JSONResponse(content=None, status_code=status.HTTP_204_NO_CONTENT)
+# 特定生理期間の取得（一ヶ月表示など）
+# エンドポイント例: GET /period/123
+@app.get("/period/{period_id}", status_code=status.HTTP_200_OK)
+async def read_single_period_mock(period_id: int):
+    mock_path = "PeriodTracker/MockData/Period/end_response.json"  # 仮に詳細データをend_response.jsonで代用
+    with open(mock_path, "r", encoding="utf-8") as f:
+        mock_data = json.load(f)
+    return JSONResponse(content=mock_data, status_code=status.HTTP_200_OK)
 
 
 @app.post("/chat", status_code=status.HTTP_201_CREATED)
