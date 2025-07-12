@@ -1,9 +1,12 @@
+#schemas.py
 from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import date, datetime
 from enum import Enum
+from typing import List, Literal
 
 # ==== Enum for Chat Mode ====
+#Enum:決められた選択肢のみを許可する仕組み
 class ChatMode(str, Enum):
     PRINCE = "PRINCE"
     MOM = "MOM"
@@ -98,17 +101,19 @@ class PeriodResponse(PeriodBase):
         orm_mode = True
 
 # ==== ChatMessage関連スキーマ ====
-class ChatMessageBase(BaseModel):
-    query: str
+
+#スキーマ：データの形式を定義するルール（入力データの検証、出力データの整形）
+class Message(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str
+    
+
+class ChatRequest(BaseModel):
     mode: ChatMode
+    messages:List[Message]
+    
 
-class ChatMessageCreate(ChatMessageBase):
-    pass
+class ChatMessageResponse(BaseModel):
+    messages: List[Message]
 
-class ChatMessageResponse(ChatMessageBase):
-    id: int
-    user_id: int
-    response: str
-    timestamp: datetime
-    class Config:
-        orm_mode = True
+
