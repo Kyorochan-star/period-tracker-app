@@ -122,5 +122,5 @@ struct ChatView: View {
 }
 
 #Preview {
-    ChatView(viewModel: ChatViewModel(chatRepository: MockChatRepository(), mode: ChatMode(id: "default", title: "デフォルト", description: "説明", iconName: "message")))
+    ChatView(viewModel: ChatViewModel(chatRepository: MockChatRepository(), mode: ChatMode(.prince)))
 }

@@ -29,7 +29,7 @@ final class ChatViewModel: ObservableObject {
 
         do {
             // ① リクエストDTOを作成し、そのままユーザーメッセージとして追加
-            let request = ChatSendRequestDTO(query: text, role: "user", mode: mode.id)
+            let request = ChatSendRequestDTO(query: text, role: "user", mode: mode.id.rawValue)
             messages.append(request.toDomain(id: messages.count, userId: 1))
 
             // ② API へ送信

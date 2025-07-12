@@ -26,7 +26,10 @@ struct ContentView: View {
                 isLoggedIn: $isLoggedIn)
         } else{
         TabView(selection: $selectedTab) {
-            ChatView(viewModel: ChatViewModel(chatRepository: MockChatRepository(), mode: ChatMode(id: "default", title: "デフォルト", description: "説明", iconName: "message")))
+            // チャット画面（モード選択画面）
+            NavigationStack {
+                ModeSelectView()
+            }
                 .tabItem {
                     Label("チャット", systemImage: "message.fill")
                 }
