@@ -1,6 +1,6 @@
 # backend/database.py
 
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Date, ForeignKey, func, event
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Date, ForeignKey, func, event, JSON
 from sqlalchemy.orm import sessionmaker, relationship, declarative_base
 from typing import Generator
 from datetime import datetime, timezone # timezone をインポート
@@ -69,6 +69,16 @@ def get_db() -> Generator: # <--- ここを変更しました
         db.close()
 
 # ==== 新しく追加するチャットメッセージモデル ====
+
+class ChatHistory(Base):
+    __tablename__ = "chat_histories"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    mode = Column(String, nullable=False)
+    messages = Column(JSON, nullable=False)  # messages配列をそのままJSONで保存
+    created_at = Column(DateTime, default=datetime.utcnow)
+
 class ChatMessage(Base):
     __tablename__ = "chat_messages"
     id = Column(Integer, primary_key=True, index=True)

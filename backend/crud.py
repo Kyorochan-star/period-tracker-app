@@ -245,8 +245,8 @@ def create_chat_message(db: Session, chat_message: ChatMessageCreate, user_id: i
     )
     db.add(db_chat_message)
     db.commit()
-    db.refresh(db_chat_message)
-    return db_chat_message
+    db.refresh(db_chat_message) #db_chat_messageオブジェクト(インスタンス)を最新状態に更新
+    return db_chat_message 
 
 def get_chat_messages(db: Session, user_id: int, skip: int = 0, limit: int = 100) -> List[ChatMessage]:
     return db.query(ChatMessage).filter(ChatMessage.user_id == user_id).order_by(ChatMessage.timestamp.desc()).offset(skip).limit(limit).all()
