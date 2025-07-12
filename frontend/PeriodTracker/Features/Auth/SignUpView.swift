@@ -14,25 +14,47 @@ struct SignUpView: View {
     @Environment(\.dismiss) private var dismiss
     var body: some View {
         ZStack{
-            Color.blue.opacity(0.1)
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(red: 0.8, green: 0.95, blue: 1.0),
+                    Color(red: 0.92, green: 0.96, blue: 1.0)
+                ]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
                 .ignoresSafeArea()
             VStack(spacing: 16) {
-                Image(systemName: "heart.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 50, height: 50)
-                    .foregroundColor(.blue)
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color(red: 0.0, green: 0.6, blue: 0.99),
+                                    Color(red: 0.1, green: 0.85, blue: 0.95)
+                                ]),
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 80, height: 80)
+                    Image(systemName: "heart.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 38, height: 40)
+                        .foregroundColor(.white)
+                }
                 
                 Text("PeriodCare")
                     .font(.title)
-                    .fontWeight(.bold)
-                Text("新規登録")
-                    .font(.title2)
                     .fontWeight(.bold)
                 
                 Text("あなたの健康をサポート")
                     .font(.caption)
                     .foregroundColor(.gray)
+                
+                Text("新規登録")
+                    .font(.title2)
+                    .fontWeight(.bold)
                 
                 TextField("お名前", text: $viewModel.name)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -58,11 +80,20 @@ struct SignUpView: View {
                     }
                 }) {
                     Text("新規登録")
+                        .fontWeight(.bold)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue)
+                        .background(LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color(red: 0.0, green: 0.6, blue: 0.99),
+                                Color(red: 0.1, green: 0.82, blue: 0.95)
+                            ]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                        )
                         .foregroundColor(.white)
-                        .cornerRadius(8)
+                        .cornerRadius(15)
                 }
             }
             .padding()
