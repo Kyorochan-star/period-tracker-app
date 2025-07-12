@@ -1,7 +1,9 @@
 {
   "id": 10,
   "userId": 1,
+  "role": "assistant",
   "query": "生理痛がつらいです…",
   "response": "休んで温かい飲み物を飲むと少し楽になるかもしれないわよ。",
+  "mode": "prince",
   "timestamp": "2025-07-11T12:30:45Z"
 } 

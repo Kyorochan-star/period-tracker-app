@@ -6,7 +6,7 @@ final class HomeViewModel: ObservableObject {
 
     @Published var showModal = false 
     @Published var isStartModal = true 
-    
+    @Published var nextPredictionDate: String = ""
     @Published var error: String? = nil
 
     @Published var showModifyModal = false

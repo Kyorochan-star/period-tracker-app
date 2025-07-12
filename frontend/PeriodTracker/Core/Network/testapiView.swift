@@ -151,7 +151,8 @@ struct TestAPIView: View {
                 // /chat (POST)
                 Button("Test /chat (POST)") {
                     let apiService = APIService()
-                    let chatData = ChatSendRequestDTO(query: "生理痛がつらいです…", mode: "王子様モード")
+                    let chatData = ChatSendRequestDTO(query: "生理痛がつらいです…",
+                                                      role:"user",mode: "王子様モード")
                     apiService.post("http://127.0.0.1:8000/chat", data: chatData) { (result: Result<ChatSendResponseDTO, Error>) in
                         switch result {
                         case .success(let data):
