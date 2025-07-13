@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks, Form
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta, timezone
 from typing import Optional
@@ -30,15 +30,7 @@ if not GOOGLE_CLIENT_ID:
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login") # 認証が必要なエンドポイントで利用
 
-# カスタムOAuth2PasswordRequestForm（SwaggerUIでEmailと表示）
-class OAuth2PasswordRequestFormEmail:
-    def __init__(
-        self,
-        email: str = Form(..., description="Email address"),
-        password: str = Form(..., description="Password"),
-    ):
-        self.username = email  # OAuth2標準のusernameフィールドとして扱う
-        self.password = password
+
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -111,12 +103,13 @@ async def register_user(user_in: schemas.UserCreate, db: Session = Depends(get_d
         auth_provider=user.auth_provider
     )
 
-# SwaggerUI OAuth2認証用（emailフィールドを使用）
-@router.post("/login", response_model=schemas.TokenResponse, status_code=status.HTTP_200_OK)
-async def login_for_access_token(request: schemas.LoginRequest, db: Session = Depends(get_db)):
-    user = crud.get_user_by_email(db, email=request.email)  # emailをusernameとして扱う
-   
-    if not user or user.auth_provider != "local" or not crud.verify_password(request.password, user.hashed_password):
+
+# SwaggerUI OAuth2認証用（usernameフィールドにメールアドレスを入力）
+@router.post("/login", response_model=schemas.Token)
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = crud.get_user_by_email(db, email=form_data.username)  # usernameフィールドにメールアドレスを入力
+    if not user or user.auth_provider != "local" or not crud.verify_password(form_data.password, user.hashed_password):
+
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password, or account uses Google authentication.",
@@ -134,6 +127,25 @@ async def login_for_access_token(request: schemas.LoginRequest, db: Session = De
         email=user.email,
         name=user.name,
         auth_provider=user.auth_provider
+    )
+
+# フロントエンド用ログイン（emailフィールドを使用）
+@router.post("/login-email", response_model=schemas.Token)
+async def login_with_email(login_request: schemas.LoginRequest, db: Session = Depends(get_db)):
+    user = crud.get_user_by_email(db, email=login_request.email)
+    if not user or user.auth_provider != "local" or not crud.verify_password(login_request.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password, or account uses Google authentication.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    access_token = create_access_token(
+        data={"user_id": user.id, "email": user.email, "auth_provider": user.auth_provider, "name": user.name}
+    )
+    return schemas.Token(
+        access_token=access_token,
+        token_type="bearer",
     )
 
 
