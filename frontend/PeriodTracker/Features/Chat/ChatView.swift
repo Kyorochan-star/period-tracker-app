@@ -22,10 +22,8 @@ struct ChatView: View {
     var body: some View {
         VStack (spacing: 0){
             HStack(spacing: 10) {
-                Image(systemName: viewModel.mode.iconName)
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                    .foregroundColor(.blue)
+                Text(viewModel.mode.iconName)
+                    .font(.system(size: 40))
                 VStack(alignment: .leading, spacing: 2) {
                     Text(viewModel.mode.title)
                         .font(.title)
@@ -37,6 +35,7 @@ struct ChatView: View {
                 Spacer()
             }
             .padding()
+            .background(viewModel.mode.color)
 
             Divider()
             ScrollViewReader { scrollProxy in
