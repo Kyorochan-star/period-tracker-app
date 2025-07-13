@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 // MARK: - Message
 struct ChatMessage: Identifiable {
@@ -32,30 +33,36 @@ struct ChatMode: Identifiable {
     let title: String
     let description: String
     let iconName: String
+    let color: Color
 
     init(_ type: ChatModeType) {
         self.id = type
         switch type {
         case .prince:
-            title = "王子様モード"
+            title = "王子様"
             description = "優しくロマンチックに励まします"
-            iconName = "crown.fill"
+            iconName = "👑"
+            color = Color.yellow.opacity(0.2)
         case .mom:
-            title = "お母さんモード"
+            title = "お母さん"
             description = "温かく実践的なアドバイス"
-            iconName = "heart.fill"
+            iconName = "👩"
+            color = Color.orange.opacity(0.2)
         case .grandma:
-            title = "おばあちゃんモード"
+            title = "おばあちゃん"
             description = "昔ながらの知恵で安心感を"
-            iconName = "figure.roll"
+            iconName = "👵"
+            color = Color.purple.opacity(0.2)
         case .boyfriend:
-            title = "彼氏モード"
+            title = "彼氏"
             description = "共感力高めで寄り添います"
-            iconName = "person.2.fill"
+            iconName = "💝"
+            color = Color.pink.opacity(0.2)
         case .nurse:
-            title = "保健室の先生モード"
+            title = "保健室の先生"
             description = "医学的に正確で丁寧な説明"
-            iconName = "cross.case.fill"
+            iconName = "🩺"
+            color = Color.cyan.opacity(0.2)
         }
     }
 }

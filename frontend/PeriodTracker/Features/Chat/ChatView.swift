@@ -22,14 +22,14 @@ struct ChatView: View {
     var body: some View {
         VStack (spacing: 0){
             HStack(spacing: 10) {
-                Image(systemName: viewModel.mode.iconName)
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                    .foregroundColor(.blue)
+                Text(viewModel.mode.iconName)
+                    .font(.system(size: 30))
                 VStack(alignment: .leading, spacing: 2) {
                     Text(viewModel.mode.title)
                         .font(.title)
                         .bold()
+                        .foregroundColor(.black)
+
                     Text(viewModel.mode.description)
                         .font(.caption)
                         .foregroundColor(.secondary)
@@ -37,6 +37,7 @@ struct ChatView: View {
                 Spacer()
             }
             .padding()
+            .background(viewModel.mode.color)
 
             Divider()
             ScrollViewReader { scrollProxy in
@@ -104,12 +105,12 @@ struct ChatView: View {
                         await viewModel.sendMessage()
                     }
                 }) {
-                    Text("送信")
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 10)
-                        .background(Color.blue)
+                    Image(systemName: "paperplane")
                         .foregroundColor(.white)
-                        .clipShape(Capsule())
+                        .padding(12)
+                        .background(Color(red: 0.2, green: 0.8, blue: 1.0) )
+                        .clipShape(Circle())
+                        
                 }
             }
             .padding()

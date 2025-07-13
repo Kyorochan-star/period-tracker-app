@@ -32,6 +32,9 @@ struct ModeSelectView: View {
             
             Divider()
             
+                .frame(height: 0.36)
+                .background(Color.gray.opacity(0.3))
+            
             ForEach(viewModel.modes, id: \.id) { mode in
                 NavigationLink(destination: {
                     let vm = ChatViewModel(chatRepository: MockChatRepository(), mode: mode)
@@ -40,11 +43,10 @@ struct ModeSelectView: View {
                     HStack(spacing: 16) {
                         ZStack {
                             Circle()
-                                .fill(Color.blue.opacity(0.1))
-                                .frame(width: 48, height: 48)
-                            Image(systemName: mode.iconName)
-                                .font(.system(size: 25))
-                                .foregroundColor(.blue)
+                                .fill(mode.color)
+                                .frame(width: 63, height: 63)
+                            Text(mode.iconName)
+                                .font(.system(size: 41.5))
                         }
 
                         VStack(alignment: .leading) {
@@ -54,7 +56,7 @@ struct ModeSelectView: View {
                             Text(mode.description)
                                 .font(.caption)
                                 .foregroundColor(.secondary)
-                        }
+                        }.font(.title2)
                     }
                     .frame(maxWidth: .infinity, minHeight: 50, alignment: .leading)
                     .padding()
