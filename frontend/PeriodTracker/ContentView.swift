@@ -19,12 +19,12 @@ struct ContentView: View {
     @State private var selectedTab = 1
 
     var body: some View {
-        if !isLoggedIn {
-            LoginView(
-                // ログイン画面のビューモデルを入れる
-                viewModel: LoginViewModel(userRepository: userRepository),
-                isLoggedIn: $isLoggedIn)
-        } else{
+        // if !isLoggedIn {
+        //     LoginView(
+        //         // ログイン画面のビューモデルを入れる
+        //         viewModel: LoginViewModel(userRepository: userRepository),
+        //         isLoggedIn: $isLoggedIn)
+        // } else{
         TabView(selection: $selectedTab) {
             // チャット画面（モード選択画面）
             NavigationStack {
@@ -47,7 +47,7 @@ struct ContentView: View {
                 }
                 .tag(2)
         }
-    }
+    // }
     }
 }
 
