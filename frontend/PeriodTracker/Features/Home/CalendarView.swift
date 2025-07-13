@@ -125,7 +125,7 @@ struct CalendarView: View {
 }
 
 #Preview {
-    CalendarView(viewModel: CalendarViewModel(periodRepository: MockPeriodRepository()))
+    CalendarView(viewModel: CalendarViewModel(periodRepository: NetworkPeriodRepository()))
 }
 
 private struct CalendarDateCell: View {

@@ -6,7 +6,10 @@ from .database import init_db_connection
 # chatルーターをインポートリストに追加
 from .routers import auth, periods, chat
 from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi.exceptions import RequestValidationError
+from fastapi import Request
+from fastapi.responses import JSONResponse
+from fastapi import status
 
 # lifespanコンテキストマネージャーを定義 ->アプリの起動時や終了時に処理を挟みたい時に使う
 @asynccontextmanager
@@ -45,6 +48,14 @@ app.add_middleware(
     allow_methods=["*"], # 全てのHTTPメソッドを許可
     allow_headers=["*"], # 全てのヘッダーを許可
 )
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    print(f"request: {await request.body()}")
+    print(f"[VALIDATION-ERROR] リクエスト形式エラー: path={request.url.path}, method={request.method}")
+    print(f"[VALIDATION-ERROR] エラー詳細: {exc.errors()}")
+    return JSONResponse(content={"detail": "Validation error"}, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 # アプリケーションのルートエンドポイント
 # このルートは、上記の `app = FastAPI(...)` インスタンスに直接関連付けられます。

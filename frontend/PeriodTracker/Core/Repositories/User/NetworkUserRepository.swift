@@ -22,27 +22,59 @@ final class NetworkUserRepository: UserRepository {
     
 
     func register(_ dto: UserRegisterRequestDTO) async throws -> User {
-        let responseDTO: UserRegisterResponseDTO = 
-            try await api.post("本番環境のAPIのURL", data: dto)
-            // 本番環境のAPIのURLに差し替え
-        return responseDTO.toDomain()
+        return try await withCheckedThrowingContinuation { continuation in
+            api.post("/auth/register", data: dto) { (result: Result<UserRegisterResponseDTO, Error>) in
+                switch result {
+                case .success(let responseDTO):
+                    continuation.resume(returning: responseDTO.toDomain())
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
     }
+    
     func login(_ dto: UserLoginRequestDTO) async throws -> User {
-        let responseDTO: UserLoginResponseDTO = 
-            try await api.post("本番環境のAPIのURL", data: dto)
-            // 本番環境のAPIのURLに差し替え
-        return responseDTO.toDomain()
+        // FastAPI の /auth/login は application/x-www-form-urlencoded で username/password を要求する
+
+        return try await withCheckedThrowingContinuation { continuation in
+            api.post("/auth/login", data: dto) { (result: Result<UserLoginResponseDTO, Error>) in
+                switch result {
+                case .success(let responseDTO):
+                    // 取得した JWT を保存。APIService が自動で Authorization ヘッダに付与する
+                    UserDefaults.standard.set(responseDTO.access_token, forKey: "authToken")
+                    continuation.resume(returning: responseDTO.toDomain())
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
     }
-    func fetchProfile() async throws -> User {
-        let responseDTO: UserProfileResponseDTO = 
-            try await api.get("本番環境のAPIのURL")
-            // 本番環境のAPIのURLに差し替え
-        return responseDTO.toDomain()
-    }
+
+    // パスワード再設定要求
     func sendResetPassword(_ dto: ForgotPasswordRequestDTO) async throws -> ForgotPasswordResponseDTO {
-        let responseDTO: ForgotPasswordResponseDTO = 
-            try await api.post("本番環境のAPIのURL", data: dto)
-            // 本番環境のAPIのURLに差し替え
-        return responseDTO
+        return try await withCheckedThrowingContinuation { continuation in
+            api.post("/auth/forgot-password", data: dto) { (result: Result<ForgotPasswordResponseDTO, Error>) in
+                switch result {
+                case .success(let responseDTO):
+                    continuation.resume(returning: responseDTO)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    func fetchProfile() async throws -> User {
+        return try await withCheckedThrowingContinuation { continuation in
+            api.get("/auth/me") { (result: Result<UserProfileResponseDTO, Error>) in
+                switch result {
+                case .success(let responseDTO):
+                    continuation.resume(returning: responseDTO.toDomain())
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
     }
 }

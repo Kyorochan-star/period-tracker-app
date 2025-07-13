@@ -14,7 +14,7 @@ final class MockChatRepository: ChatRepository {
     // チャット履歴を取得する
     func getHistory() async throws -> [ChatMessage] {
         let responseDTO: ChatHistoryResponseDTO = 
-            try await api.get("/chat/history")
+            try await api.get("/chat")
         return responseDTO.map { $0.toDomain() }
     }
 

@@ -87,6 +87,7 @@ struct ChatView: View {
                 }
             }
             
+            Divider()
             
             HStack {
                 TextField("メッセージを入力...", text: $viewModel.text)
@@ -104,12 +105,21 @@ struct ChatView: View {
                         await viewModel.sendMessage()
                     }
                 }) {
-                    Text("送信")
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 10)
-                        .background(Color.blue)
+                    Image(systemName: "paperplane")
                         .foregroundColor(.white)
-                        .clipShape(Capsule())
+                        .padding(12)
+                        .bold()
+                        .background(
+                            LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color(red: 0.1, green: 0.6, blue: 0.99),
+                                    Color(red: 0.1, green: 0.82, blue: 0.95)
+                                ]),
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .clipShape(Circle())
                 }
             }
             .padding()
@@ -122,5 +132,5 @@ struct ChatView: View {
 }
 
 #Preview {
-    ChatView(viewModel: ChatViewModel(chatRepository: MockChatRepository(), mode: ChatMode(.prince)))
+    ChatView(viewModel: ChatViewModel(chatRepository: NetworkChatRepository(), mode: ChatMode(.prince)))
 }
