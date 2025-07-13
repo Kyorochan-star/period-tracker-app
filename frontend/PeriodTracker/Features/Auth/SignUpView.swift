@@ -56,6 +56,28 @@ struct SignUpView: View {
                     .font(.title2)
                     .fontWeight(.bold)
                 
+                // 成功メッセージ表示
+                if let successMessage = viewModel.successMessage {
+                    Text(successMessage)
+                        .foregroundColor(.green)
+                        .font(.footnote)
+                        .padding(.horizontal)
+                        .padding(.vertical, 8)
+                        .background(Color.green.opacity(0.1))
+                        .cornerRadius(8)
+                }
+                
+                // エラーメッセージ表示
+                if let error = viewModel.error {
+                    Text(error)
+                        .foregroundColor(.red)
+                        .font(.footnote)
+                        .padding(.horizontal)
+                        .padding(.vertical, 8)
+                        .background(Color.red.opacity(0.1))
+                        .cornerRadius(8)
+                }
+                
                 TextField("お名前", text: $viewModel.name)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 
@@ -73,9 +95,11 @@ struct SignUpView: View {
                     Task {
                         if await viewModel.signUp() {
                             // 登録成功時の処理
+                            // 1秒後に画面を閉じる
+                            try? await Task.sleep(nanoseconds: 1_000_000_000)
                             dismiss()
                         } else {
-                            // 登録失敗時の処理
+                            // 登録失敗時の処理はViewModelで処理される
                         }
                     }
                 }) {
@@ -110,6 +134,6 @@ struct SignUpView: View {
 
 #Preview {
     SignUpView(
-        viewModel: SignUpViewModel(userRepository: MockUserRepository())
+        viewModel: SignUpViewModel(userRepository: NetworkUserRepository())
         )
 }

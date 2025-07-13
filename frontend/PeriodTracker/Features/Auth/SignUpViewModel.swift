@@ -17,6 +17,7 @@ final class SignUpViewModel: ObservableObject {
     @Published var confirmPassword: String = ""
 
     @Published var error: String? = nil
+    @Published var successMessage: String? = nil
 
     // リポジトリの注入
     private let userRepository: UserRepository
@@ -32,6 +33,7 @@ final class SignUpViewModel: ObservableObject {
             let request = UserRegisterRequestDTO(email: email, password: password, name: name)
             let user = try await userRepository.register(request)
             //  登録成功時の処理
+            self.successMessage = "登録が完了しました！"
             return true 
         } catch {
             // エラー時の処理＝＞拡張する必要あり

@@ -122,5 +122,5 @@ struct ChatView: View {
 }
 
 #Preview {
-    ChatView(viewModel: ChatViewModel(chatRepository: MockChatRepository(), mode: ChatMode(.prince)))
+    ChatView(viewModel: ChatViewModel(chatRepository: NetworkChatRepository(), mode: ChatMode(.prince)))
 }

@@ -71,6 +71,10 @@ class APIService{
                     let jsonData = try JSONDecoder().decode(U.self, from: data)
                     completion(.success(jsonData))
                 } catch {
+                    print("Decoding error: \(error)")
+                    if let responseString = String(data: data, encoding: .utf8) {
+                        print("Response data: \(responseString)")
+                    }
                     completion(.failure(error))
                 }
             }
@@ -101,7 +105,7 @@ class APIService{
 
 extension APIService {
     // GET
-    func get<U: Decodable>(_ path: String,
+    func get<U: Decodable> (_ path: String,
                            queryItems: [URLQueryItem]? = nil) async throws -> U {
 
         var components = URLComponents(string: APIConfig.baseURL + path)!
@@ -136,5 +140,24 @@ extension APIService {
 
 //    try validate(response: response)
     return try JSONDecoder().decode(U.self, from: data)
+    }
+
+    // MARK: - application/x-www-form-urlencoded POST
+    /// フォームエンコードでPOSTする。username/passwordなどの送信に使用。
+    func postForm<U: Decodable>(_ path: String, form: [String: String]) async throws -> U {
+        var urlComponents = URLComponents(string: APIConfig.baseURL + path)!
+
+        // key=value&key2=value2 形式にエンコード
+        let bodyString = form.map { key, value in
+            let encodedKey = key.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            let encodedVal = value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            return "\(encodedKey)=\(encodedVal)"
+        }.joined(separator: "&")
+
+        var request = makeRequest(url: urlComponents.url!, method: "POST", body: bodyString.data(using: .utf8))
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+
+        let (data, _) = try await URLSession.shared.data(for: request)
+        return try JSONDecoder().decode(U.self, from: data)
     }
 }

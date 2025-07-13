@@ -29,12 +29,14 @@ final class LoginViewModel: ObservableObject {
         guard validate() else { return } 
 
         do {
-            let request = UserLoginRequestDTO(email: email, hashed_password: password)
+            let request = UserLoginRequestDTO(email: email, password: password)
             let user = try await userRepository.login(request)
             // ログイン成功時の処理
+            print("Login successful for user: \(user.email)")
             isLoggedIn = true
         } catch{
             // エラー時の処理＝＞拡張する必要あり
+            print("Login error: \(error)")
             self.error = error.localizedDescription
         } 
     }

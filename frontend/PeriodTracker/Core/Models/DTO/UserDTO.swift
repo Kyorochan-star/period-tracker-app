@@ -19,6 +19,7 @@ struct UserRegisterRequestDTO: Codable {
     let name: String 
 } 
 
+
 // ユーザー新規登録 response型定義
 struct UserRegisterResponseDTO: Codable {
     let access_token: String 
@@ -39,7 +40,7 @@ extension UserRegisterResponseDTO {
 // ユーザーログイン
 struct UserLoginRequestDTO: Codable {
     let email: String 
-    let hashed_password: String 
+    let password: String 
 } 
 
 // ユーザーログイン response型定義

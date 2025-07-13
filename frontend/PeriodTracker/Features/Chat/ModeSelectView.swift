@@ -16,7 +16,7 @@ struct ModeSelectView: View {
                 .foregroundColor(.gray)
             ForEach(viewModel.modes, id: \.id) { mode in
                 NavigationLink(destination: {
-                    let vm = ChatViewModel(chatRepository: MockChatRepository(), mode: mode)
+                    let vm = ChatViewModel(chatRepository: NetworkChatRepository(), mode: mode)
                     ChatView(viewModel: vm)
                 }) {
                     HStack(spacing: 16) {
