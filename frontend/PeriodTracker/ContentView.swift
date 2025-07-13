@@ -13,7 +13,7 @@ import SwiftUI
 
 struct ContentView: View {
     // repositoryの注入 本番環境の場合はNetworkUserRepositoryを使用
-    private let userRepository: UserRepository = MockUserRepository()
+    private let userRepository: UserRepository = NetworkUserRepository()
 
     @State private var isLoggedIn = false
     @State private var selectedTab = 1

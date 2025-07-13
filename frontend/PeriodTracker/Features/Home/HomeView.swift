@@ -12,7 +12,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    @StateObject private var viewModel = HomeViewModel(periodRepository: MockPeriodRepository())
+    @StateObject private var viewModel = HomeViewModel(periodRepository: NetworkPeriodRepository())
 
     var body: some View {
         ZStack{
@@ -74,7 +74,7 @@ struct HomeView: View {
                     .padding(.bottom, 20)
                     .background(Color.white)
                     
-                    CalendarView(viewModel: CalendarViewModel(periodRepository: MockPeriodRepository()))
+                    CalendarView(viewModel: CalendarViewModel(periodRepository: NetworkPeriodRepository()))
                         .padding(.top, 13)
                         .padding(.horizontal)
                 }

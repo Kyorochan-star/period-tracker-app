@@ -5,5 +5,7 @@ import Foundation
 
 enum APIConfig {
     /// バックエンドのベース URL
-    static let baseURL = "http://127.0.0.1:8000"
+    static let baseURL = "http://13.230.8.62:8000/"
 } 
+
+//
