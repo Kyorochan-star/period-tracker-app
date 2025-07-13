@@ -38,14 +38,6 @@ struct ModeSelectView: View {
                     ChatView(viewModel: vm)
                 }) {
                     HStack(spacing: 16) {
-                        ZStack {
-                            Circle()
-                                .fill(Color.blue.opacity(0.1))
-                                .frame(width: 48, height: 48)
-                            Image(systemName: mode.iconName)
-                                .font(.system(size: 25))
-                                .foregroundColor(.blue)
-                        }
 
                         VStack(alignment: .leading) {
                             Text(mode.title)

@@ -37,25 +37,25 @@ struct ChatMode: Identifiable {
         self.id = type
         switch type {
         case .prince:
-            title = "王子様モード"
+            title = "王子様"
             description = "優しくロマンチックに励まします"
-            iconName = "crown.fill"
+            iconName = "👑"
         case .mom:
-            title = "お母さんモード"
+            title = "お母さん"
             description = "温かく実践的なアドバイス"
-            iconName = "heart.fill"
+            iconName = "👩"
         case .grandma:
-            title = "おばあちゃんモード"
+            title = "おばあちゃん"
             description = "昔ながらの知恵で安心感を"
-            iconName = "figure.roll"
+            iconName = "👵"
         case .boyfriend:
-            title = "彼氏モード"
+            title = "彼氏"
             description = "共感力高めで寄り添います"
-            iconName = "person.2.fill"
+            iconName = "💝"
         case .nurse:
-            title = "保健室の先生モード"
+            title = "保健室の先生"
             description = "医学的に正確で丁寧な説明"
-            iconName = "cross.case.fill"
+            iconName = "🩺"
         }
     }
 }
