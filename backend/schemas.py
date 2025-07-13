@@ -58,11 +58,19 @@ class ResetPasswordRequest(BaseModel):
     token: str
     new_password: str
 
+# ログイン用スキーマ（SwaggerUIでの表示を分かりやすくするため）
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
 # ==== Period関連スキーマ ====
 class PeriodBase(BaseModel):
     start_date: date
-    # end_dateは通常、後から更新されるため、ここではオプションにしておく
-    end_date: Optional[date] = None # <-- ここを修正: Optional[date] = None が正しい
+    end_date: Optional[date] = None
+
+class PeriodCreate(BaseModel):
+    # 新規��成時はstart_dateのみ必須
+    start_date: date
 
 class PeriodCreateResponse(BaseModel):
     id: int
@@ -80,10 +88,10 @@ class PeriodFullResponse(BaseModel):
     prediction_end_date: Optional[date] = None
     created_at: datetime
     updated_at: datetime # 更新時に設定される
-class PeriodCreate(PeriodBase):
-    # 新規作成時にend_dateも提供される可能性があるため、Baseを継承しつつ、
-    # 必要に応じてend_dateにNone以外の値も許可する
-    pass
+
+class PeriodEndDate(BaseModel):
+    # 生理終了日登録専用スキーマ
+    end_date: date
 
 class PeriodUpdate(BaseModel): # <-- ここを修正: PeriodBaseではなくBaseModelから継承し、全てのフィールドをOptionalに
     # 部分更新のため、全てのフィールドをOptionalに
@@ -116,8 +124,8 @@ class ChatMessageResponse(BaseModel):
     user_id: int
     mode: str
     query: str
-    ai_response: str
-    created_at: datetime
+    response: str  # ai_responseではなくresponseフィールドを使用
+    timestamp: datetime  # created_atではなくtimestampフィールドを使用
     
     class Config:
         orm_mode = True
