@@ -22,10 +22,7 @@ async def create_period_entry( # 関数名をシンプルに
             detail="現在、アクティブな生理期間があります。新しい期間を開始する前に、まず終了してください。"
         )
 
-    # PeriodCreateスキーマにはend_dateがOptionalで含まれる可能性がある
-    # もしend_dateが提供されていて、それがstart_dateより前ならエラー
-    if period.end_date is not None and period.end_date < period.start_date:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="終了日は開始日より前に設定できません。")
+    # PeriodCreateスキーマはstart_dateのみを持つため、end_dateの検証は不要
 
     # crud関数を呼び出して生理レコードを作成
     # crud.create_period内で予測日が計算され、DBに保存されます
@@ -40,29 +37,31 @@ async def create_period_entry( # 関数名をシンプルに
 # async def update_period_entry(...):
 #    ... (削除) ...
 
-# PATCH エンドポイントは「登録した後の編集機能は一切入りません」という要件に反するため削除
-# とのコメントがありましたが、実際には `update_period` 関数が `crud.py` に存在するため、
-# こちらにPATCHエンドポイントを復活させます。要件に合わせる場合はこのエンドポイントを削除してください。
-@router.patch("/{period_id}", response_model=schemas.PeriodResponse)
-async def update_period_entry(
+# 生理終了日登録専用エンドポイント
+@router.patch("/{period_id}/end", response_model=schemas.PeriodResponse)
+async def end_period(
     period_id: int,
-    period_update: schemas.PeriodUpdate,
+    period_end: schemas.PeriodEndDate,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    """
+    アクティブな生理期間に終了日を登録します。
+    """
     db_period = crud.get_period_by_id(db, period_id=period_id, user_id=current_user.id)
     if not db_period:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="生理期間が見つからないか、アクセス権がありません。")
 
-    # もし start_date が更新され、end_date が既存で、start_date > end_date になる場合
-    if period_update.start_date and db_period.end_date and period_update.start_date > db_period.end_date:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="開始日は終了日より後に設定できません。")
+    # 既に終了日が設定されている場合はエラー
+    if db_period.end_date is not None:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="この生理期間は既に終了しています。")
 
-    # もし end_date が更新され、それが start_date より前になる場合
-    if period_update.end_date and db_period.start_date and period_update.end_date < db_period.start_date:
+    # 終了日が開始日より前の場合はエラー
+    if period_end.end_date < db_period.start_date:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="終了日は開始日より前に設定できません。")
 
-
+    # PeriodUpdateスキーマを使用して更新
+    period_update = schemas.PeriodUpdate(end_date=period_end.end_date)
     return crud.update_period(db=db, db_period=db_period, period_update=period_update)
 
 # ③ カレンダー表示＆六ヶ月分の表示 (柔軟な取得)

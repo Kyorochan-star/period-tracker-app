@@ -85,6 +85,7 @@ class ChatMessage(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     query = Column(String, nullable=False) # ユーザーからの質問
     response = Column(String, nullable=False) # AIからの回答
+    mode = Column(String, nullable=False) # チャットモード（boyfriend, prince, nurse, grandma, mother）
     # timestampのデフォルト値を変更: func.now() を使用し、データベースのタイムスタンプを反映
     timestamp = Column(DateTime, default=func.now())
 
