@@ -20,8 +20,9 @@ struct ModeSelectView: View {
                     ChatView(viewModel: vm)
                 }) {
                     HStack(spacing: 16) {
-                        Image(systemName: mode.iconName)
-                            .foregroundColor(.blue)
+                        Text(mode.iconName)
+//                        Image(systemName: mode.iconName)
+//                            .foregroundColor(.blue)
                         VStack(alignment: .leading) {
                             Text(mode.title).bold()
                             Text(mode.description)
