@@ -1,31 +1,57 @@
-# Core Frameworks
-fastapi==0.111.0  # Stable and widely used
-uvicorn==0.30.1   # Compatible with FastAPI 0.111.0
-starlette==0.37.2 # FastAPI dependency
-
-# Database & ORM
-SQLAlchemy==2.0.31  # Modern and widely adopted ORM
-# If you are using an async database driver with SQLAlchemy 2.0
-# psycopg2-binary==2.9.9 # For PostgreSQL (e.g., if using Asyncpg with SQLAlchemy)
-# asyncpg==0.29.0 # For async PostgreSQL driver (if using it directly with FastAPI/SQLAlchemy)
-# aiosqlite==0.20.0 # For async SQLite driver (if using it with SQLAlchemy's async capabilities)
-
-# Authentication & Hashing
-python-jose[cryptography]==3.3.0 # For JWT token handling
-passlib[bcrypt]==1.7.4         # For password hashing
-# Environment Variables
-python-dotenv==1.0.1           # For loading .env files
-
-# Pydantic (FastAPI's data validation)
-pydantic==2.8.2
-pydantic-settings==2.3.4 # For managing settings (often used with FastAPI)
-pydantic_core==2.20.1 # Pydantic dependency
-
-# Other common dependencies (often installed implicitly but good to be explicit for stability)
-annotated-types==0.6.0
-anyio==4.4.0
-click==8.1.7
-h11==0.14.0
-idna==3.7
+annotated-types==0.7.0
+anyio==4.9.0
+bcrypt==4.3.0
+boto3==1.39.3
+botocore==1.39.3
+cachetools==5.5.2
+certifi==2025.7.9
+charset-normalizer==3.4.2
+click==8.2.1
+distro==1.9.0
+dotenv==0.9.9
+ecdsa==0.19.1
+fastapi==0.115.14
+google-ai-generativelanguage==0.6.15
+google-api-core==2.25.1
+google-api-python-client==2.176.0
+google-auth==2.40.3
+google-auth-httplib2==0.2.0
+google-generativeai==0.8.5
+googleapis-common-protos==1.70.0
+grpcio==1.73.1
+grpcio-status==1.71.2
+h11==0.16.0
+httpcore==1.0.9
+httplib2==0.22.0
+httpx==0.28.1
+idna==3.10
+jiter==0.10.0
+jmespath==1.0.1
+openai==1.95.1
+passlib==1.7.4
+proto-plus==1.26.1
+protobuf==5.29.5
+pyasn1==0.6.1
+pyasn1_modules==0.4.2
+pydantic==2.11.7
+pydantic_core==2.33.2
+pyparsing==3.2.3
+python-dateutil==2.9.0.post0
+python-dotenv==1.1.1
+python-jose==3.5.0
+python-multipart==0.0.20
+requests==2.32.4
+rsa==4.9.1
+s3transfer==0.13.0
+setuptools==80.9.0
+six==1.17.0
 sniffio==1.3.1
-typing-extensions==4.12.2
+SQLAlchemy==2.0.41
+starlette==0.46.2
+tqdm==4.67.1
+typing-inspection==0.4.1
+typing_extensions==4.14.0
+uritemplate==4.2.0
+urllib3==2.5.0
+uvicorn==0.35.0
+wheel==0.45.1

@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks, Form
+from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta, timezone
 from typing import Optional
@@ -29,6 +29,16 @@ if not GOOGLE_CLIENT_ID:
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login") # 認証が必要なエンドポイントで利用
+
+# カスタムOAuth2PasswordRequestForm（SwaggerUIでEmailと表示）
+class OAuth2PasswordRequestFormEmail:
+    def __init__(
+        self,
+        email: str = Form(..., description="Email address"),
+        password: str = Form(..., description="Password"),
+    ):
+        self.username = email  # OAuth2標準のusernameフィールドとして扱う
+        self.password = password
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -98,40 +108,11 @@ async def register_user(user_in: schemas.UserCreate, db: Session = Depends(get_d
 
     )
 
+# SwaggerUI OAuth2認証用（emailフィールドを使用）
 @router.post("/login", response_model=schemas.Token)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    # 1. ユーザーの取得と認証情報の検証
-    # 提供されたメールアドレスでユーザーを検索し、パスワードが一致するか、
-    # および認証プロバイダーが"local"（Google認証などではない）であることを確認します。
-    user = crud.get_user_by_email(db, email=form_data.username) # OAuth2PasswordRequestFormはusernameフィールドを使用
+async def login_for_access_token(form_data: OAuth2PasswordRequestFormEmail = Depends(), db: Session = Depends(get_db)):
+    user = crud.get_user_by_email(db, email=form_data.username)  # emailをusernameとして扱う
     if not user or user.auth_provider != "local" or not crud.verify_password(form_data.password, user.hashed_password):
-        # 認証に失敗した場合はHTTP 401 Unauthorizedエラーを返します。
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password, or account uses Google authentication.",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
-    # 2. アクセストークンの生成
-    # 認証に成功したユーザーのために、今後の認証で使用するJWTアクセストークンを生成します。
-    # トークンには、ユーザーID、メール、認証プロバイダー、名前などの情報が埋め込まれます。
-    access_token = create_access_token(
-        data={"user_id": user.id, "email": user.email, "auth_provider": user.auth_provider, "name": user.name}
-    )
-
-    # 3. レスポンスの返却
-    # クライアントにアクセストークンとトークンタイプ（"bearer"）を返します。
-    # ここも新規登録と同様に、schemas.Tokenの定義とレスポンスのフィールドが合致するか確認が必要です。
-    return schemas.Token(
-        access_token=access_token,
-        token_type="bearer",
-    )
-
-# メールとパスワードでのログイン（SwaggerUIで分かりやすい表示）
-@router.post("/login-email", response_model=schemas.Token)
-async def login_with_email(login_request: schemas.LoginRequest, db: Session = Depends(get_db)):
-    user = crud.get_user_by_email(db, email=login_request.email)
-    if not user or user.auth_provider != "local" or not crud.verify_password(login_request.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password, or account uses Google authentication.",
@@ -145,6 +126,8 @@ async def login_with_email(login_request: schemas.LoginRequest, db: Session = De
         access_token=access_token,
         token_type="bearer",
     )
+
+
 
 # Google認証
 @router.post("/google", response_model=schemas.Token)
