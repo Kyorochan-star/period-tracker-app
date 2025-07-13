@@ -77,7 +77,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 
 # ==== エンドポイントの実装 ====
 
-@router.post("/register", response_model=schemas.Token, status_code=status.HTTP_201_CREATED)
+@router.post("/register", response_model=schemas.TokenResponse, status_code=status.HTTP_201_CREATED)
 async def register_user(user_in: schemas.UserCreate, db: Session = Depends(get_db)):
     # 1. メールアドレスの重複チェック
     # 同じメールアドレスのユーザーが既に存在するかデータベースで確認します。
@@ -102,17 +102,21 @@ async def register_user(user_in: schemas.UserCreate, db: Session = Depends(get_d
     # クライアントにアクセストークンとトークンタイプ（"bearer"）を返します。
     # 通常、schemas.Tokenはaccess_tokenとtoken_typeのみを持ちます。
     # user_idなどの追加情報は、通常は別のエンドポイント（例: /auth/me）で取得されます。
-    return schemas.Token(
+    return schemas.TokenResponse(
         access_token=access_token,
         token_type="bearer",
-
+        user_id=user.id,
+        email=user.email,
+        name=user.name,
+        auth_provider=user.auth_provider
     )
 
 # SwaggerUI OAuth2認証用（emailフィールドを使用）
-@router.post("/login", response_model=schemas.Token)
-async def login_for_access_token(form_data: OAuth2PasswordRequestFormEmail = Depends(), db: Session = Depends(get_db)):
-    user = crud.get_user_by_email(db, email=form_data.username)  # emailをusernameとして扱う
-    if not user or user.auth_provider != "local" or not crud.verify_password(form_data.password, user.hashed_password):
+@router.post("/login", response_model=schemas.TokenResponse, status_code=status.HTTP_200_OK)
+async def login_for_access_token(request: schemas.LoginRequest, db: Session = Depends(get_db)):
+    user = crud.get_user_by_email(db, email=request.email)  # emailをusernameとして扱う
+   
+    if not user or user.auth_provider != "local" or not crud.verify_password(request.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password, or account uses Google authentication.",
@@ -122,9 +126,14 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestFormEmail = Dep
     access_token = create_access_token(
         data={"user_id": user.id, "email": user.email, "auth_provider": user.auth_provider, "name": user.name}
     )
-    return schemas.Token(
+    print(f"access_token: {access_token}")  
+    return schemas.TokenResponse(
         access_token=access_token,
         token_type="bearer",
+        user_id=user.id,
+        email=user.email,
+        name=user.name,
+        auth_provider=user.auth_provider
     )
 
 

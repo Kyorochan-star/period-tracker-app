@@ -23,6 +23,7 @@ async def register_user_mock():
 # ユーザーログイン (ローカル認証)
 @app.post("/auth/login", status_code=status.HTTP_200_OK)
 async def login_for_access_token_mock():
+    print("login_for_access_token_mock")
     mock_path = "PeriodTracker/MockData/User/login_response.json"
     with open(mock_path, "r", encoding="utf-8") as f:
         mock_data = json.load(f)

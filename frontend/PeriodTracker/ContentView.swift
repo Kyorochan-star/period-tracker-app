@@ -13,9 +13,9 @@ import SwiftUI
 
 struct ContentView: View {
     // repositoryの注入 本番環境の場合はNetworkUserRepositoryを使用
-    private let userRepository: UserRepository = MockUserRepository()
+    private let userRepository: UserRepository = NetworkUserRepository()
 
-    @State private var isLoggedIn = false
+    @State private var isLoggedIn = true
     @State private var selectedTab = 1
 
     var body: some View {
@@ -28,7 +28,7 @@ struct ContentView: View {
         TabView(selection: $selectedTab) {
             // チャット画面（モード選択画面）
             NavigationStack {
-                ModeSelectView()
+                ChatModeSelectView()
             }
                 .tabItem {
                     Label("チャット", systemImage: "message.fill")

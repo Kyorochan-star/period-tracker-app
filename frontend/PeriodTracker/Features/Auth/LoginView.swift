@@ -67,6 +67,12 @@ struct LoginView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
                     
+                    if let error = viewModel.error {
+                        Text(error)
+                            .foregroundColor(.red)
+                            .font(.caption)
+                            .padding(.horizontal)
+                    }
                     
                     Button(action: {
                         // LoginViewModel.login()は非同期関数だが、
@@ -76,6 +82,7 @@ struct LoginView: View {
                             await viewModel.login()
                             if viewModel.isLoggedIn {
                                 isLoggedIn = true
+                                print("Login successful, isLoggedIn set to true")
                             }
                         }
                     }) {
@@ -98,7 +105,7 @@ struct LoginView: View {
                     }
                     .padding(.horizontal)
                     
-                    NavigationLink(destination: ResetPasswordView(viewModel: ResetPasswordViewModel(userRepository: MockUserRepository()))) {
+                    NavigationLink(destination: ResetPasswordView(viewModel: ResetPasswordViewModel(userRepository: NetworkUserRepository()))) {
                         (
                             Text("パスワードをお忘れの方は")
                                 .foregroundColor(.black)
@@ -130,7 +137,7 @@ struct LoginView: View {
                     }
                     .padding(.horizontal)
                     
-                    NavigationLink(destination: SignUpView(viewModel: SignUpViewModel(userRepository: MockUserRepository()))) {
+                    NavigationLink(destination: SignUpView(viewModel: SignUpViewModel(userRepository: NetworkUserRepository()))) {
                         Text("新規登録")
                             .font(.system(size: 16.9))
                             .fontWeight(.bold)
@@ -152,6 +159,6 @@ struct LoginView: View {
     
     #Preview {
         LoginView(
-            viewModel: LoginViewModel(userRepository: MockUserRepository()),
+            viewModel: LoginViewModel(userRepository: NetworkUserRepository()),
             isLoggedIn: .constant(false))
     }

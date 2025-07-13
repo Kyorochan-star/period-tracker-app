@@ -60,6 +60,6 @@ struct ResetPasswordView: View {
 }
 #Preview {
     ResetPasswordView(
-        viewModel: ResetPasswordViewModel(userRepository: MockUserRepository())
+        viewModel: ResetPasswordViewModel(userRepository: NetworkUserRepository())
         )
 }
